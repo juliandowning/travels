@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Big Sky & Bear Country — Wyoming · Montana · Texas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --pine:#2D4A2D;--pine2:#4A7A4A;--pine3:#C8E8C0;
+  --sky:#1A4A6A;--sky2:#2A6A9A;--sky3:#A0C8E8;
+  --amber:#C47A20;--amber2:#D4922A;--amber3:#F0D0A0;
+  --snow:#F4F8F4;--frost:#E8F4EC;--white:#FFFFFF;
+  --ink:#1A1C1E;--slate:#5A6A74;--mid:#3A4A54;
+  --border:rgba(45,74,45,0.15);--shadow:rgba(10,20,10,0.08);
+  --gold:#C47A20;--gold2:#D4922A;
+  /* Texas leg */
+  --bourbon:#7B3F1E;--bourbon2:#A05828;
+  --blush:#C4962A;--tex-sky:#1A3A5C;
+}
+body{font-family:'Inter',sans-serif;background:var(--snow);color:var(--ink);overflow-x:hidden}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.8s,visibility 0.8s}
+#loader.done{opacity:0;visibility:hidden;pointer-events:none}
+.loader-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-style:italic;color:var(--pine3);text-align:center}
+.loader-sub{font-size:0.6rem;letter-spacing:0.4em;text-transform:uppercase;color:rgba(200,232,192,0.4)}
+.loader-bar{width:180px;height:1px;background:rgba(45,74,45,0.2);overflow:hidden;position:relative}
+.loader-bar::after{content:'';position:absolute;left:-100%;top:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,var(--pine2),transparent);animation:bar 1.8s ease-in-out infinite}
+@keyframes bar{to{left:200%}}
+
+/* NAV DOTS */
+#nav-ring{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:10px}
+.nav-pip{width:9px;height:9px;border-radius:50%;border:1px solid rgba(45,74,45,0.35);background:rgba(45,74,45,0.1);cursor:pointer;transition:all 0.3s;text-decoration:none;display:block;position:relative}
+.nav-pip::after{content:attr(data-label);position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap;color:var(--pine);opacity:0;transition:opacity 0.2s;pointer-events:none;background:var(--white);padding:2px 8px;border-radius:4px;box-shadow:0 2px 8px var(--shadow)}
+.nav-pip:hover::after,.nav-pip.active::after{opacity:1}
+.nav-pip.active,.nav-pip:hover{background:var(--pine);border-color:var(--pine);transform:scale(1.5)}
+.nav-pip.tex{border-color:rgba(123,63,30,0.35);background:rgba(123,63,30,0.1)}
+.nav-pip.tex.active,.nav-pip.tex:hover{background:var(--bourbon);border-color:var(--bourbon)}
+@media(max-width:700px){#nav-ring{display:none}}
+
+/* TIMELINE */
+#timeline{position:fixed;left:20px;top:10%;height:80%;z-index:100;display:flex;flex-direction:column;align-items:center}
+.tl-line{flex:1;width:1px;background:linear-gradient(to bottom,transparent,rgba(45,74,45,0.15),transparent);position:relative;overflow:hidden}
+.tl-fill{position:absolute;top:0;left:0;right:0;height:0%;background:linear-gradient(to bottom,var(--pine),var(--amber));transition:height 0.3s}
+.tl-dot{width:6px;height:6px;border-radius:50%;border:1px solid rgba(45,74,45,0.3);background:transparent;margin:3px 0;flex-shrink:0;transition:all 0.4s}
+.tl-dot.lit{background:var(--pine);border-color:var(--pine);box-shadow:0 0 6px rgba(45,74,45,0.4)}
+.tl-dot.tex-dot{border-color:rgba(123,63,30,0.3)}
+.tl-dot.tex-dot.lit{background:var(--bourbon);border-color:var(--bourbon);box-shadow:0 0 6px rgba(123,63,30,0.4)}
+@media(max-width:700px){#timeline{display:none}}
+
+/* HERO */
+#s-hero{position:relative;height:100vh;min-height:620px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#060C08}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.hero-content{position:relative;z-index:5;text-align:center;padding:0 24px;padding-top:clamp(120px,28vh,200px)}
+.hero-eyebrow{font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(200,232,192,0.6);margin-bottom:16px;animation:fadeUp 1s 1.2s both;line-height:1.6}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,9vw,6.5rem);font-weight:900;line-height:0.9;color:#fff;text-shadow:0 0 80px rgba(45,74,45,0.6);animation:fadeUp 1s 1.5s both}
+.hero-title em{font-style:italic;color:var(--pine3)}
+.hero-sub{font-size:clamp(0.85rem,2vw,1rem);color:rgba(200,232,192,0.65);margin-top:14px;letter-spacing:0.06em;animation:fadeUp 1s 1.8s both}
+.hero-names{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;animation:fadeUp 1s 2.1s both}
+.hero-name{font-size:0.68rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(248,255,248,0.75);padding:5px 14px;border:1px solid rgba(74,122,74,0.4);border-radius:20px}
+.hero-date{font-family:'Playfair Display',serif;font-style:italic;font-size:0.82rem;color:#fff;margin-top:14px;animation:fadeUp 1s 2.4s both;line-height:1.5}
+.hero-legs{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap;animation:fadeUp 1s 2.7s both;margin-bottom:64px}
+.hero-leg{font-size:0.6rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;padding:5px 14px;border-radius:20px}
+.leg-wy{background:rgba(45,74,45,0.4);color:var(--pine3);border:1px solid rgba(74,122,74,0.5)}
+.leg-mt{background:rgba(26,74,106,0.4);color:var(--sky3);border:1px solid rgba(42,106,154,0.5)}
+.leg-tx{background:rgba(123,63,30,0.4);color:var(--amber3);border:1px solid rgba(160,88,40,0.5)}
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;z-index:5;animation:fadeIn 1s 3.2s both;text-decoration:none}
+.scroll-hint-pill{font-size:0.68rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#fff;background:rgba(45,74,45,0.3);border:1.5px solid rgba(74,122,74,0.5);border-radius:24px;padding:10px 24px;backdrop-filter:blur(6px)}
+.scroll-line{width:1px;height:28px;background:linear-gradient(var(--pine2),transparent);animation:pulse-v 2s infinite}
+@keyframes pulse-v{0%,100%{opacity:0.4}50%{opacity:1}}
+
+/* SECTIONS */
+section{position:relative;overflow:hidden}
+.section-inner{max-width:860px;margin:0 auto;padding:52px 24px}
+.day-stripe{height:3px}
+.day-stripe.wy{background:linear-gradient(90deg,var(--pine),var(--pine2),transparent)}
+.day-stripe.mt{background:linear-gradient(90deg,var(--sky),var(--sky2),transparent)}
+.day-stripe.tx{background:linear-gradient(90deg,var(--bourbon),var(--bourbon2),var(--blush),transparent)}
+.leg-banner{font-size:0.58rem;font-weight:700;letter-spacing:0.4em;text-transform:uppercase;padding:8px 20px;display:inline-block;border-radius:0 0 10px 0;margin-bottom:0}
+.leg-banner.wy{background:rgba(45,74,45,0.1);color:var(--pine);border-right:3px solid var(--pine2);border-bottom:3px solid var(--pine2)}
+.leg-banner.mt{background:rgba(26,74,106,0.1);color:var(--sky);border-right:3px solid var(--sky2);border-bottom:3px solid var(--sky2)}
+.leg-banner.tx{background:rgba(123,63,30,0.1);color:var(--bourbon);border-right:3px solid var(--bourbon2);border-bottom:3px solid var(--bourbon2)}
+.section-day{font-size:0.6rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--slate);margin-bottom:10px;display:block}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:700;line-height:1.15;margin-bottom:20px}
+.section-title.pine{color:var(--pine)}
+.section-title.sky{color:var(--sky)}
+.section-title.tex{color:var(--bourbon)}
+.section-title.amber{color:var(--amber)}
+.section-intro{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;line-height:1.8;color:var(--slate);margin-bottom:36px;border-left:3px solid var(--pine2);padding-left:18px}
+.section-intro.sky{border-left-color:var(--sky2)}
+.section-intro.tex{border-left-color:var(--bourbon2)}
+
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:0 2px 12px var(--shadow);transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(45,74,45,0.1);border-color:rgba(45,74,45,0.3)}
+.card-icon{font-size:1.8rem;margin-bottom:10px;display:block}
+.card-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--pine);margin-bottom:8px}
+.card-title a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(45,74,45,0.25)}
+.card-title.sky{color:var(--sky)}
+.card-title.sky a{color:var(--sky);border-bottom-color:rgba(26,74,106,0.25)}
+.card-title.tex{color:var(--bourbon)}
+.card-title.tex a{color:var(--bourbon);border-bottom-color:rgba(123,63,30,0.25)}
+.card-body{font-size:0.875rem;line-height:1.72;color:var(--mid)}
+.card-body strong{color:var(--ink)}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{font-size:0.58rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+.tag-pine{background:rgba(45,74,45,0.08);color:var(--pine);border:1px solid rgba(45,74,45,0.22)}
+.tag-sky{background:rgba(26,74,106,0.08);color:var(--sky);border:1px solid rgba(26,74,106,0.22)}
+.tag-amber{background:rgba(196,122,32,0.1);color:var(--amber);border:1px solid rgba(196,122,32,0.28)}
+.tag-red{background:rgba(160,30,30,0.08);color:#8D2020;border:1px solid rgba(160,30,30,0.2)}
+.tag-tex{background:rgba(123,63,30,0.08);color:var(--bourbon);border:1px solid rgba(123,63,30,0.22)}
+.tag-lava{background:rgba(60,60,60,0.08);color:#444;border:1px solid rgba(60,60,60,0.2)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+
+/* TIME BLOCKS */
+.time-block{display:flex;gap:18px;margin-bottom:32px;align-items:flex-start}
+.t-tag{flex-shrink:0;min-width:76px;font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--pine);border-top:2px solid var(--pine);padding-top:6px}
+.t-tag.sky{color:var(--sky);border-top-color:var(--sky)}
+.t-tag.amber{color:var(--amber);border-top-color:var(--amber)}
+.t-tag.tex{color:var(--bourbon);border-top-color:var(--bourbon)}
+.t-body{flex:1}
+.t-body p{font-size:0.9rem;line-height:1.75;color:var(--mid);margin-bottom:10px}
+.t-body p:last-child{margin-bottom:0}
+.t-body strong{color:var(--ink)}
+.t-body a{color:var(--pine);text-decoration:none;border-bottom:1px solid rgba(45,74,45,0.25)}
+
+/* CALLOUT BOXES */
+.tip-box{background:rgba(45,74,45,0.07);border-left:4px solid var(--pine2);border-radius:0 12px 12px 0;padding:18px 22px;margin-bottom:20px}
+.tip-box.sky{background:rgba(26,74,106,0.07);border-left-color:var(--sky2)}
+.tip-box.amber{background:rgba(196,122,32,0.07);border-left-color:var(--amber2)}
+.tip-box.tex{background:rgba(123,63,30,0.07);border-left-color:var(--bourbon2)}
+.tip-label{font-size:0.58rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:var(--pine);margin-bottom:8px}
+.tip-label.sky{color:var(--sky)}
+.tip-label.amber{color:var(--amber)}
+.tip-label.tex{color:var(--bourbon)}
+.tip-body{font-size:0.875rem;line-height:1.7;color:var(--mid)}
+
+/* WEDDING BANNER */
+.wedding-banner{background:linear-gradient(135deg,rgba(196,150,42,0.12),rgba(123,63,30,0.1));border:2px solid rgba(196,150,42,0.4);border-radius:16px;padding:28px;text-align:center;margin-bottom:32px;position:relative;overflow:hidden}
+.wedding-banner::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(196,150,42,0.03) 20px,rgba(196,150,42,0.03) 21px)}
+.wedding-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);margin-bottom:6px}
+.wedding-sub{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--slate)}
+
+/* HOTEL CARDS */
+.hotel-card{border-radius:12px;border:1px solid var(--border);padding:18px 20px;background:var(--white);position:relative;overflow:hidden;margin-bottom:12px}
+.hotel-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.hotel-card.mid::before{background:var(--pine2)}
+.hotel-card.lux::before{background:linear-gradient(to bottom,var(--amber),var(--pine))}
+.hotel-label{font-size:0.55rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--slate);margin-bottom:4px}
+.hotel-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--pine);margin-bottom:2px}
+.hotel-name a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(45,74,45,0.25)}
+.hotel-name.sky{color:var(--sky)}
+.hotel-name.sky a{color:var(--sky);border-bottom-color:rgba(26,74,106,0.25)}
+.hotel-name.tex{color:var(--bourbon)}
+.hotel-name.tex a{color:var(--bourbon);border-bottom-color:rgba(123,63,30,0.25)}
+.hotel-location{font-size:0.75rem;color:var(--slate);margin-bottom:8px}
+.hotel-desc{font-size:0.85rem;line-height:1.65;color:var(--mid)}
+.hotel-price{font-size:0.75rem;font-weight:600;color:var(--amber);margin-top:8px}
+
+/* SECTION BACKGROUNDS */
+#s-intro{background:var(--frost)}
+#s-day1,#s-day4,#s-day8{background:var(--snow)}
+#s-day2,#s-day5,#s-day9{background:var(--frost)}
+#s-day3,#s-day6{background:var(--snow)}
+#s-day7{background:linear-gradient(160deg,#0A1408,#0E1A0C)}
+#s-day10{background:var(--snow)}
+#s-day11,#s-day13{background:var(--frost)}
+#s-day12,#s-day14{background:linear-gradient(160deg,#1A0A04,#1E0E06)}
+#s-day15{background:var(--snow)}
+#s-costs{background:linear-gradient(160deg,#0A1408,#0E1A0C)}
+
+/* COSTS TABLE */
+.costs-table{width:100%;border-collapse:collapse;margin-top:20px;font-size:0.875rem}
+.costs-table th{background:var(--pine);color:#fff;padding:10px 14px;text-align:left;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase}
+.costs-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(200,230,200,0.85)}
+.costs-table tr:last-child td{font-weight:700;color:#fff;background:rgba(45,74,45,0.15);border-bottom:none}
+.costs-table td:first-child{color:rgba(230,245,230,0.95);font-weight:600}
+.costs-table td:nth-child(2){color:#90D890}
+
+/* BOOK LINKS */
+.book-link{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--pine);text-decoration:none;border:1px solid rgba(45,74,45,0.3);padding:5px 12px;border-radius:20px;transition:all 0.2s}
+.book-link:hover{background:var(--pine);color:#fff;border-color:var(--pine)}
+
+/* BACK LINK */
+.back-link{display:inline-flex;align-items:center;gap:8px;font-size:0.7rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--slate);text-decoration:none;padding:10px 0;transition:color 0.2s}
+.back-link:hover{color:var(--pine)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.65s ease,transform 0.65s ease}
+.reveal.v{opacity:1;transform:translateY(0)}
+
+footer{background:var(--ink);color:rgba(200,220,200,0.35);text-align:center;padding:44px 20px;border-top:2px solid rgba(45,74,45,0.2);font-size:0.7rem;letter-spacing:0.15em}
+footer .hl{color:var(--pine3)}
+footer .gold{color:var(--amber2)}
+
+@media(max-width:700px){
+  .section-inner{padding:38px 16px}
+  .g2,.g3{grid-template-columns:1fr}
+  .time-block{flex-direction:column;gap:4px}
+  .t-tag{min-width:auto;border-top:none;border-left:2px solid var(--pine);padding:0 0 0 10px}
+  .t-tag.sky{border-left-color:var(--sky)}
+  .t-tag.amber{border-left-color:var(--amber)}
+  .t-tag.tex{border-left-color:var(--bourbon)}
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="25" stroke="rgba(45,74,45,0.2)" stroke-width="1" fill="none"/><path d="M28 8 L28 20 M28 36 L28 48 M8 28 L20 28 M36 28 L48 28" stroke="rgba(74,122,74,0.4)" stroke-width="1.5" stroke-linecap="round"/><circle cx="28" cy="28" r="4" fill="var(--pine2)"/></svg>
+  <div class="loader-title">Into the wilderness&hellip;</div>
+  <div class="loader-bar"></div>
+  <div class="loader-sub">Wyoming &middot; Montana &middot; Texas &middot; October 2027</div>
+</div>
+
+<div id="timeline">
+  <div class="tl-dot" id="tl0"></div>
+  <div class="tl-line"><div class="tl-fill" id="tl-fill"></div></div>
+  <div class="tl-dot" id="tl1"></div><div class="tl-line"><div class="tl-fill" style="height:100%"></div></div>
+  <div class="tl-dot" id="tl2"></div><div class="tl-line"><div class="tl-fill" style="height:100%"></div></div>
+  <div class="tl-dot" id="tl3"></div><div class="tl-line"><div class="tl-fill" style="height:100%"></div></div>
+  <div class="tl-dot" id="tl4"></div><div class="tl-line"><div class="tl-fill" style="height:100%"></div></div>
+  <div class="tl-dot" id="tl5"></div><div class="tl-line"><div class="tl-fill" style="height:100%"></div></div>
+  <div class="tl-dot" id="tl6"></div><div class="tl-line"><div class="tl-fill" style="height:100%"></div></div>
+  <div class="tl-dot" id="tl7"></div><div class="tl-line"><div class="tl-fill" style="height:100%"></div></div>
+  <div class="tl-dot tex-dot" id="tl8"></div><div class="tl-line"><div class="tl-fill" style="height:100%"></div></div>
+  <div class="tl-dot tex-dot" id="tl9"></div>
+</div>
+
+<nav id="nav-ring">
+  <a href="#s-hero"  class="nav-pip active" data-label="Top"></a>
+  <a href="#s-day1"  class="nav-pip" data-label="Days 1–3 · Jackson Hole"></a>
+  <a href="#s-day4"  class="nav-pip" data-label="Days 4–7 · Yellowstone"></a>
+  <a href="#s-day8"  class="nav-pip" data-label="Days 8–9 · Cody"></a>
+  <a href="#s-day10" class="nav-pip" data-label="Days 10–11 · Bozeman"></a>
+  <a href="#s-day12" class="nav-pip tex" data-label="Day 12 · Austin"></a>
+  <a href="#s-day13" class="nav-pip tex" data-label="Days 13–14 · The Wedding"></a>
+  <a href="#s-day15" class="nav-pip tex" data-label="Day 15 · Austin &amp; Fly Home"></a>
+  <a href="#s-costs" class="nav-pip" data-label="Costs &amp; Booking"></a>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="s-hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Option A &mdash; The Wilderness Route &mdash; October 2027</p>
+    <h1 class="hero-title">Big Sky &amp;<br><em>Bear Country</em></h1>
+    <p class="hero-sub">Wyoming &middot; Montana &middot; Texas</p>
+    <div class="hero-names">
+      <span class="hero-name">Julian</span>
+      <span class="hero-name">Lianne</span>
+    </div>
+    <p class="hero-date">Tuesday 12th &mdash; Wednesday 27th October 2027 &nbsp;&middot;&nbsp; 15 nights</p>
+    <div class="hero-legs">
+      <span class="hero-leg leg-wy">&#127795; Wyoming</span>
+      <span class="hero-leg leg-mt">&#9968; Montana</span>
+      <span class="hero-leg leg-tx">&#11088; Texas</span>
+    </div>
+  </div>
+  <a href="#s-day1" class="scroll-hint">
+    <span class="scroll-hint-pill">Begin the adventure &#8595;</span>
+    <div class="scroll-line"></div>
+  </a>
+</section>
+
+<!-- ═══════════════════ OVERVIEW ═══════════════════ -->
+<section id="s-intro">
+  <div class="day-stripe wy"></div>
+  <div class="section-inner">
+    <a href="../" class="back-link reveal">&#8592; Downing Travels</a>
+    <span class="section-day reveal" style="margin-top:16px">The Route</span>
+    <h2 class="section-title pine reveal">Fly into Jackson.<br>Drive, fly to Texas.</h2>
+    <p class="section-intro reveal">Grand Teton at dawn. Grizzly bears gorging before winter in Lamar Valley. Geysers, elk bugling in the rut, the cowboy town of Cody, and Montana&rsquo;s vast open skies — before flying south to Austin to end the trip at a Texas Hill Country wedding.</p>
+    <div class="grid g3 reveal">
+      <div class="card">
+        <span class="card-icon">&#127795;</span>
+        <div class="card-title">Leg I &mdash; Wyoming</div>
+        <div class="card-body">Nights 1&ndash;9. Jackson Hole, Grand Teton, Yellowstone (4 nights), Cody. Fly in to JAC.</div>
+        <div class="card-tags"><span class="tag tag-pine">9 NIGHTS</span><span class="tag tag-amber">FLY IN JAC</span></div>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#9968;</span>
+        <div class="card-title sky">Leg II &mdash; Montana</div>
+        <div class="card-body">Nights 10&ndash;11. Bozeman. Big sky country, ranch culture, Gallatin Canyon.</div>
+        <div class="card-tags"><span class="tag tag-sky">2 NIGHTS</span><span class="tag tag-lava">DRIVE FROM CODY</span></div>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#11088;</span>
+        <div class="card-title tex">Leg III &mdash; Texas</div>
+        <div class="card-body">Nights 12&ndash;15. Fly Bozeman → Austin direct. One night Austin, drive to Marble Falls for the wedding, back to Austin, fly home from AUS.</div>
+        <div class="card-tags"><span class="tag tag-tex">4 NIGHTS</span><span class="tag tag-amber">BZN → AUS</span><span class="tag tag-amber">FLY HOME AUS</span></div>
+      </div>
+    </div>
+    <div class="tip-box amber reveal" style="margin-top:20px">
+      <div class="tip-label amber">&#127814; October in Yellowstone &mdash; Why This Timing Is Perfect</div>
+      <div class="tip-body">Summer crowds are gone. Aspens are turning gold. <strong>Grizzlies are in hyperphagia</strong> &mdash; gorging 20,000 calories a day before hibernation, which means they&rsquo;re highly active and visible at all hours. The elk rut is at its peak &mdash; bulls bugling across valleys at dawn. Wolves are active and bold. This is genuinely one of the finest wildlife-watching windows on the planet.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DAYS 1–3: JACKSON HOLE ═══════════════════ -->
+<section id="s-day1">
+  <div class="day-stripe wy"></div>
+  <div class="section-inner">
+    <div class="leg-banner wy reveal">&#127795; Leg I &mdash; Wyoming</div>
+    <span class="section-day reveal" style="margin-top:16px">Days 1&ndash;3 &middot; Tue 12 &ndash; Thu 14 October</span>
+    <h2 class="section-title pine reveal">Jackson Hole</h2>
+    <p class="section-intro reveal">Fly direct into Jackson Hole Airport (JAC) &mdash; one of the most dramatic airport approaches in America, landing between the Tetons and the National Elk Refuge. Three nights here: Grand Teton National Park, the Snake River, and one of the best small towns in the American West.</p>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Day 1<br>Arrival</div>
+      <div class="t-body">
+        <p><strong>Fly London &rarr; Jackson Hole (JAC)</strong> via connecting flight (Denver or Salt Lake City are typical hubs). Collect your 4WD SUV — essential for the roads ahead. Check in and get your bearings on the Town Square.</p>
+        <div class="tip-box">
+          <div class="tip-label">&#128663; Hire a 4WD SUV</div>
+          <div class="tip-body">A capable 4WD is essential throughout. Book well in advance for October — peak wildlife season brings serious demand. Drop off in Austin on Day 16.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Day 2<br>Grand Teton</div>
+      <div class="t-body">
+        <div class="grid g2">
+          <div class="card">
+            <span class="card-icon">&#9968;</span>
+            <div class="card-title">Grand Teton National Park</div>
+            <div class="card-body">The Teton Range rises 7,000 feet straight from the valley floor with no foothills &mdash; one of the most dramatic mountain fronts in North America. Drive the Teton Park Road at dawn for moose, bison, and the light on the peaks. Stop at <strong>Oxbow Bend</strong> for mirror reflections.</div>
+            <div class="card-tags"><span class="tag tag-pine">DAWN LIGHT</span><span class="tag tag-amber">MOOSE &amp; BISON</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon">&#128675;</span>
+            <div class="card-title">Snake River Float Trip</div>
+            <div class="card-body">A guided float down the Snake River with the Tetons behind you. Ospreys, bald eagles, otters and moose along the banks. October is a beautiful time &mdash; golden cottonwoods lining the river, far fewer people than summer.</div>
+            <div class="card-tags"><span class="tag tag-pine">BALD EAGLES</span><span class="tag tag-sky">HALF DAY</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Day 3<br>Jackson</div>
+      <div class="t-body">
+        <div class="card">
+          <span class="card-icon">&#127978;</span>
+          <div class="card-title">Jackson Town Square</div>
+          <div class="card-body">The famous elk antler arches at every corner of the square. Browse the galleries, saddle shops, and Western outfitters. The <strong>Million Dollar Cowboy Bar</strong> has saddle bar stools and live country music &mdash; a genuine institution. Dinner at the <strong>Snake River Grill</strong> for wild game and an exceptional wine list in a log cabin setting.</div>
+          <div class="card-tags"><span class="tag tag-pine">COWBOY BARS</span><span class="tag tag-amber">ELK ANTLER ARCHES</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Stay</div>
+      <div class="t-body">
+        <div class="hotel-card lux">
+          <div class="hotel-label">The Landmark</div>
+          <div class="hotel-name"><a href="https://www.thecloudveil.com" target="_blank" rel="noopener">The Cloudveil, Autograph Collection</a></div>
+          <div class="hotel-location">Town Square, Jackson</div>
+          <div class="hotel-desc">Boutique hotel right on the historic Town Square. Stone exterior, earth-toned interiors, indoor fireplaces. Walking distance to everything. The best address in Jackson.</div>
+          <div class="hotel-price">From ~$350/night</div>
+        </div>
+        <div class="hotel-card mid">
+          <div class="hotel-label">The Alternative</div>
+          <div class="hotel-name"><a href="https://www.hotelanvil.com" target="_blank" rel="noopener">Anvil Hotel</a></div>
+          <div class="hotel-location">Town Square, Jackson</div>
+          <div class="hotel-desc">50 rooms, Woolrich blankets, rain showers, onsite restaurant Glorietta. Great value for the location, strong design sensibility.</div>
+          <div class="hotel-price">From ~$220/night</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DAYS 4–7: YELLOWSTONE ═══════════════════ -->
+<section id="s-day4">
+  <div class="day-stripe wy"></div>
+  <div class="section-inner">
+    <span class="section-day reveal">Days 4&ndash;7 &middot; Fri 15 &ndash; Mon 18 October</span>
+    <h2 class="section-title pine reveal">Yellowstone<br>National Park</h2>
+    <p class="section-intro reveal">Four nights in the world&rsquo;s first national park. The Lamar Valley at dawn for bears, wolves and bison. Geysers, hot springs, and 10,000 geothermal features. This is the wildlife heartland of North America &mdash; and October is when it truly comes alive.</p>
+
+    <div class="tip-box amber reveal">
+      <div class="tip-label amber">&#128062; Bear Watching Strategy</div>
+      <div class="tip-body"><strong>Lamar Valley</strong> is your priority &mdash; arrive before dawn and stay until 10am, then return at dusk. October grizzlies are highly visible as they feed intensively before denning. Bring binoculars and a spotting scope if you have one. The valley also has the highest wolf population in the lower 48 &mdash; the Lamar Canyon pack is frequently visible. <strong>Hayden Valley</strong> is a secondary option for bears and bison.</div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Day 4<br>Arrival</div>
+      <div class="t-body">
+        <p>Drive 100km north from Jackson through the John D. Rockefeller Parkway. Enter Yellowstone via the South Entrance. Stop at <strong>West Thumb Geyser Basin</strong> &mdash; hot springs right on the edge of Yellowstone Lake, steam rising from the water. Check in and orientate.</p>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Day 5<br>Lamar Valley</div>
+      <div class="t-body">
+        <div class="card" style="border-left:3px solid var(--pine)">
+          <span class="card-icon">&#128062;</span>
+          <div class="card-title">Lamar Valley &mdash; The Serengeti of North America</div>
+          <div class="card-body">Up before dawn for the drive to Lamar Valley &mdash; the greatest wildlife spectacle in America. In October: <strong>grizzly bears in hyperphagia</strong>, bison herds, elk bugling in the rut, and wolves if you&rsquo;re lucky (Lamar Canyon pack). Bring a long lens. The light at sunrise over the valley is extraordinary. Stay all morning, return at dusk.</div>
+          <div class="card-tags"><span class="tag tag-pine">GRIZZLY BEARS</span><span class="tag tag-amber">WOLVES</span><span class="tag tag-pine">ELK RUT</span><span class="tag tag-lava">DAWN START</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Day 6<br>Geysers</div>
+      <div class="t-body">
+        <div class="grid g2">
+          <div class="card">
+            <span class="card-icon">&#128167;</span>
+            <div class="card-title">Old Faithful &amp; Upper Geyser Basin</div>
+            <div class="card-body">The world&rsquo;s most famous geyser erupts every 60&ndash;90 minutes to 55 metres. Walk the Upper Geyser Basin boardwalk &mdash; the greatest concentration of geysers on Earth.</div>
+            <div class="card-tags"><span class="tag tag-amber">ERUPTS EVERY 90 MINS</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon">&#127774;</span>
+            <div class="card-title">Grand Prismatic Spring</div>
+            <div class="card-body">Yellowstone&rsquo;s largest hot spring &mdash; 90 metres across, vivid rings of orange, yellow and green from heat-loving bacteria around a deep blue centre. Best viewed from the overlook trail above. Unmissable.</div>
+            <div class="card-tags"><span class="tag tag-pine">OVERLOOK TRAIL</span><span class="tag tag-sky">LARGEST HOT SPRING</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Day 7<br>Hayden &amp; Canyon</div>
+      <div class="t-body">
+        <div class="grid g2">
+          <div class="card">
+            <span class="card-icon">&#128047;</span>
+            <div class="card-title">Hayden Valley</div>
+            <div class="card-body">The other great wildlife corridor &mdash; bison herds, grizzlies fishing for cutthroat trout, coyotes, trumpeter swans. A dawn drive here is never wasted.</div>
+            <div class="card-tags"><span class="tag tag-pine">BISON HERDS</span><span class="tag tag-amber">GRIZZLIES</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon">&#127756;</span>
+            <div class="card-title">Grand Canyon of Yellowstone</div>
+            <div class="card-body">The Yellowstone River drops 94 metres over the Lower Falls into a canyon of vivid yellow and orange rock. Views from Artist Point are genuinely jaw-dropping.</div>
+            <div class="card-tags"><span class="tag tag-amber">LOWER FALLS 94M</span><span class="tag tag-sky">ARTIST POINT</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Stay</div>
+      <div class="t-body">
+        <div class="hotel-card lux">
+          <div class="hotel-label">Inside the Park</div>
+          <div class="hotel-name"><a href="https://www.yellowstonenationalparklodges.com/lodges/lake-yellowstone-hotel/" target="_blank" rel="noopener">Lake Yellowstone Hotel</a></div>
+          <div class="hotel-location">Lake Village, Yellowstone</div>
+          <div class="hotel-desc">The grandest hotel in any US national park &mdash; a 1891 colonial revival building on the shores of Yellowstone Lake. Sunroom overlooking the water, excellent restaurant. Book months ahead for October.</div>
+          <div class="hotel-price">From ~$280/night</div>
+        </div>
+        <div class="hotel-card mid">
+          <div class="hotel-label">Gateway Alternative</div>
+          <div class="hotel-name"><a href="https://www.yellowstonegatewaylodge.com" target="_blank" rel="noopener">Yellowstone Gateway Inn, Gardiner</div>
+          <div class="hotel-location">Gardiner, MT (North Entrance)</div>
+          <div class="hotel-desc">Stay just outside the north entrance in Gardiner &mdash; puts you closest to Lamar Valley for dawn starts. More flexibility on booking too.</div>
+          <div class="hotel-price">From ~$180/night</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DAYS 8–9: CODY ═══════════════════ -->
+<section id="s-day8">
+  <div class="day-stripe wy"></div>
+  <div class="section-inner">
+    <span class="section-day reveal">Days 8&ndash;9 &middot; Tue 19 &ndash; Wed 20 October</span>
+    <h2 class="section-title pine reveal">Cody, Wyoming</h2>
+    <p class="section-intro reveal">Named after Buffalo Bill Cody, this is the most authentically Western town in America. Drive east through the stunning Wapiti Valley out of Yellowstone &mdash; one of the most scenic mountain drives in Wyoming. Two nights in cowboy country.</p>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Drive<br>~1h 30m</div>
+      <div class="t-body"><p>The drive east from Yellowstone&rsquo;s East Entrance through the <strong>Wapiti Valley</strong> along the North Fork of the Shoshone River is magnificent &mdash; hoodoos, canyon walls, and the last wild wolves outside the park territory. Keep your eyes open.</p></div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Cody</div>
+      <div class="t-body">
+        <div class="grid g2">
+          <div class="card">
+            <span class="card-icon">&#127984;</span>
+            <div class="card-title"><a href="https://centerofthewest.org" target="_blank" rel="noopener">Buffalo Bill Center of the West</a></div>
+            <div class="card-body">Five world-class museums in one complex: the Buffalo Bill Museum, Whitney Western Art Museum, Plains Indian Museum, Natural History Museum, and Firearms Museum. Genuinely one of the great museums of the American West. Allow a full morning.</div>
+            <div class="card-tags"><span class="tag tag-pine">5 MUSEUMS</span><span class="tag tag-amber">FULL MORNING</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon">&#129312;</span>
+            <div class="card-title">Rodeo &amp; Western Culture</div>
+            <div class="card-body">The <strong>Cody Nite Rodeo</strong> runs June&ndash;August so just misses October, but Cody&rsquo;s rodeo spirit never really stops. Check local listings for the <strong>NRA Finals Rodeo</strong> in Billings (usually mid-October) &mdash; it&rsquo;s 3 hours north but worth it if the dates align. The <strong>Irma Hotel Bar</strong>, built by Buffalo Bill himself in 1902, is a must regardless.</div>
+            <div class="card-tags"><span class="tag tag-amber">CHECK NRA FINALS DATES</span><span class="tag tag-pine">IRMA HOTEL 1902</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box reveal">
+      <div class="tip-label">&#127914; The NRA Finals Rodeo &mdash; Billings, MT</div>
+      <div class="tip-body">The National Rodeo Association Finals typically runs <strong>mid-October in Billings, Montana</strong> &mdash; about 3 hours north of Cody. If the dates land right for your trip (check <a href="https://montanaprorodeo.org" target="_blank" rel="noopener">montanaprorodeo.org</a> as October 2027 approaches), this is genuine championship rodeo: bull riding, barrel racing, team roping. Worth building the Montana leg around it.</div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag">Stay</div>
+      <div class="t-body">
+        <div class="hotel-card lux">
+          <div class="hotel-label">The Classic</div>
+          <div class="hotel-name"><a href="https://www.irmahotel.com" target="_blank" rel="noopener">The Irma Hotel</a></div>
+          <div class="hotel-location">12th Street, Cody</div>
+          <div class="hotel-desc">Built by Buffalo Bill Cody in 1902 and named after his daughter. A genuine piece of American West history &mdash; the cherrywood bar was a gift from Queen Victoria. This is where you stay in Cody.</div>
+          <div class="hotel-price">From ~$140/night</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DAYS 10–11: BOZEMAN ═══════════════════ -->
+<section id="s-day10">
+  <div class="day-stripe mt"></div>
+  <div class="section-inner">
+    <div class="leg-banner mt reveal">&#9968; Leg II &mdash; Montana</div>
+    <span class="section-day reveal" style="margin-top:16px">Days 10&ndash;11 &middot; Thu 21 &ndash; Fri 22 October</span>
+    <h2 class="section-title sky reveal">Bozeman, Montana</h2>
+    <p class="section-intro sky reveal">Drive 3 hours north from Cody into the Big Sky State. Bozeman sits in the Gallatin Valley, surrounded by mountains on three sides, with the Bridger Range to the north and the Gallatin Canyon to the south. Lively university town, excellent food, genuine ranch country.</p>
+
+    <div class="time-block reveal">
+      <div class="t-tag sky">Drive<br>~3h</div>
+      <div class="t-body"><p>The drive north from Cody through the Bighorn Basin and into the Gallatin Valley is big, open, Montana at its most itself. Stop in <strong>Red Lodge</strong> for lunch &mdash; a beautiful Victorian mining town at the foot of the Beartooth Range.</p></div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag sky">Bozeman</div>
+      <div class="t-body">
+        <div class="grid g2">
+          <div class="card">
+            <span class="card-icon">&#127956;</span>
+            <div class="card-title sky">Gallatin Canyon Drive</div>
+            <div class="card-body">Drive south on Highway 191 through the Gallatin Canyon &mdash; the river that runs alongside in a narrow gorge, the mountains pressing in on both sides. <em>A River Runs Through It</em> country. Stop at <strong>Ousel Falls</strong> for a short hike.</div>
+            <div class="card-tags"><span class="tag tag-sky">A RIVER RUNS THROUGH IT</span><span class="tag tag-pine">OUSEL FALLS</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon">&#127984;</span>
+            <div class="card-title sky">Museum of the Rockies</div>
+            <div class="card-body">One of the finest natural history museums in the US, with the world&rsquo;s largest collection of dinosaur fossils. The T-Rex specimens alone are worth the visit. Part of Montana State University.</div>
+            <div class="card-tags"><span class="tag tag-sky">WORLD&rsquo;S BEST DINO FOSSILS</span></div>
+          </div>
+        </div>
+        <div class="tip-box sky" style="margin-top:16px">
+          <div class="tip-label sky">&#127860; Dinner: Bozeman&rsquo;s Food Scene</div>
+          <div class="tip-body"><strong>MAP Brewing Co</strong> for craft beer and views of the Bridger Range. <strong>Blackbird Kitchen</strong> for a proper dinner &mdash; local beef, foraged mushrooms, excellent wine list. Bozeman punches well above its size for restaurants.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag sky">Stay</div>
+      <div class="t-body">
+        <div class="hotel-card lux">
+          <div class="hotel-label">The Best Address</div>
+          <div class="hotel-name sky"><a href="https://www.armstronghotel.com" target="_blank" rel="noopener">The Kimpton Armory Hotel</a></div>
+          <div class="hotel-location">Main Street, Bozeman</div>
+          <div class="hotel-desc">The grandest hotel in Bozeman &mdash; in a beautifully restored 1941 National Guard Armory. Soaring ceilings, exposed brick, excellent bar. Central location, walking distance to everything.</div>
+          <div class="hotel-price">From ~$220/night</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DAY 12: AUSTIN ═══════════════════ -->
+<section id="s-day12" style="background:var(--snow)">
+  <div class="day-stripe tx"></div>
+  <div class="section-inner">
+    <div class="leg-banner tx reveal">&#11088; Leg III &mdash; Texas</div>
+    <span class="section-day reveal" style="margin-top:16px">Day 12 &middot; Sat 23 October</span>
+    <h2 class="section-title tex reveal">Austin Arrives</h2>
+    <p class="section-intro tex reveal">Fly Bozeman direct to Austin &mdash; connections via Salt Lake City or Denver, typically 3.5&ndash;4 hours total. Arrive by afternoon, one night in the city before driving to the wedding in the morning. The bats, 6th Street, The Driskill.</p>
+
+    <div class="time-block reveal">
+      <div class="t-tag tex">Fly</div>
+      <div class="t-body">
+        <div class="tip-box">
+          <div class="tip-label">&#9992; Bozeman (BZN) &rarr; Austin (AUS)</div>
+          <div class="tip-body">No direct flight but excellent one-stop connections &mdash; Delta via Salt Lake City or United via Denver, typically 3.5&ndash;4 hours total. Arrive mid-afternoon. Book ahead: October is busy in both cities.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag tex">Dusk</div>
+      <div class="t-body">
+        <div class="card" style="border-left:3px solid var(--bourbon)">
+          <span class="card-icon">&#128056;</span>
+          <div class="card-title tex">Congress Avenue Bridge Bat Colony</div>
+          <div class="card-body">1.5 million Mexican free-tailed bats emerge at dusk in a continuous dark ribbon. Late October is the very end of the season before they migrate &mdash; check <a href="https://www.batcon.org" target="_blank" rel="noopener" style="color:var(--bourbon)">batcon.org</a> for 2027 emergence dates. Arrive 20 minutes early. Free, unmissable.</div>
+          <div class="card-tags"><span class="tag tag-tex">1.5 MILLION BATS</span><span class="tag tag-amber">FREE &amp; UNMISSABLE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag tex">Evening</div>
+      <div class="t-body">
+        <p><strong>6th Street</strong> for a quick wander and live music. Dinner close to the hotel &mdash; keep it easy. Early start in the morning for the drive to Marble Falls.</p>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag tex">Stay</div>
+      <div class="t-body">
+        <div class="hotel-card lux">
+          <div class="hotel-label">The Landmark</div>
+          <div class="hotel-name tex"><a href="https://www.driskillhotel.com" target="_blank" rel="noopener">The Driskill</a></div>
+          <div class="hotel-location">6th Street, Austin</div>
+          <div class="hotel-desc">Austin&rsquo;s most storied hotel &mdash; built in 1886 by cattle baron Jesse Driskill, ornate Romanesque lobby, stained glass, longhorn busts. Right on 6th Street. The Driskill Bar for a last drink before bed.</div>
+          <div class="hotel-price">From ~$260/night</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DAYS 13–14: THE WEDDING ═══════════════════ -->
+<section id="s-day13">
+  <div class="day-stripe tx"></div>
+  <div class="section-inner">
+    <div class="leg-banner tx reveal">&#11088; Leg III &mdash; Texas</div>
+    <div class="wedding-banner reveal" style="margin-top:20px">
+      <div class="wedding-title">&#128149; Will &amp; Kylie &#128149;</div>
+      <div class="wedding-sub">The Retreat at Balcones Springs &middot; Marble Falls, Texas &middot; 27&ndash;28 October 2027</div>
+    </div>
+    <span class="section-day reveal">Days 13&ndash;14 &middot; Sun 26 &ndash; Mon 27 October</span>
+    <h2 class="section-title tex reveal">The Wedding</h2>
+    <p class="section-intro tex reveal">Fly Denver &rarr; Austin (2h 40m), collect your car, and drive 90 minutes northwest to the Texas Hill Country. The Retreat at Balcones Springs: 250 acres of live oak and juniper, a private lake, and nine wedding venues on a single property. This is what it was all heading towards.</p>
+
+    <div class="time-block reveal">
+      <div class="t-tag tex">The Venue</div>
+      <div class="t-body">
+        <div class="card" style="border-left:3px solid var(--bourbon)">
+          <span class="card-icon">&#127968;</span>
+          <div class="card-title tex"><a href="https://texasretreat.com" target="_blank" rel="noopener">The Retreat at Balcones Springs</a></div>
+          <div class="card-body">104 Balcones Springs Drive, Marble Falls TX &mdash; 45 minutes north of Austin, near Marble Falls in the Texas Hill Country. <strong>250 acres</strong> of live oak and juniper land. Private lake (Lake Ted). Nine wedding venues on site. Luxury cabin-style lodging, full-service gourmet catering, pool, horseback riding, zip line, bonfires. Family-run since 1993. A complete weekend on a single property.</div>
+          <div class="card-tags"><span class="tag tag-tex">250 ACRES</span><span class="tag tag-amber">PRIVATE LAKE</span><span class="tag tag-tex">LUXURY CABINS ON SITE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box tex reveal">
+      <div class="tip-label tex">&#127797; Texas Hill Country in October</div>
+      <div class="tip-body">Late October in the Hill Country is perfect &mdash; temperatures around 20&ndash;25&deg;C, dry, with stunning golden light. The live oaks turn copper and the juniper is vivid green. Some of the most beautiful landscape in Texas.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DAY 15: AUSTIN ═══════════════════ -->
+<section id="s-day15">
+  <div class="day-stripe tx"></div>
+  <div class="section-inner">
+    <span class="section-day reveal">Day 15 &middot; Tuesday 28 October</span>
+    <h2 class="section-title tex reveal">Austin &mdash; The Last Night</h2>
+    <p class="section-intro tex reveal">Wedding done. Drive 90 minutes northeast from Marble Falls back into Austin. One final night in the city before flying home tomorrow. Franklin for lunch if you can manage it, bats at dusk, one last whiskey at The Driskill Bar.</p>
+
+    <div class="time-block reveal">
+      <div class="t-tag tex">Dusk</div>
+      <div class="t-body">
+        <div class="card" style="border-left:3px solid var(--bourbon)">
+          <span class="card-icon">&#128056;</span>
+          <div class="card-title tex">Congress Avenue Bridge Bat Colony</div>
+          <div class="card-body">1.5 million Mexican free-tailed bats emerge from under the bridge at dusk in a continuous dark ribbon for 20&ndash;30 minutes. Late October is the very end of the season before they migrate south &mdash; check the <a href="https://www.batcon.org" target="_blank" rel="noopener" style="color:var(--bourbon)">Bat Conservation International</a> site for 2027 emergence dates. Get there 20 minutes early. Completely free, completely unmissable.</div>
+          <div class="card-tags"><span class="tag tag-tex">1.5 MILLION BATS</span><span class="tag tag-amber">FREE SPECTACLE</span><span class="tag tag-lava">ARRIVE 20 MINS EARLY</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag tex">Evening</div>
+      <div class="t-body">
+        <div class="grid g2">
+          <div class="card">
+            <span class="card-icon">&#127869;</span>
+            <div class="card-title tex">Franklin Barbecue</div>
+            <div class="card-body">The most famous BBQ in Texas &mdash; possibly America. Arrive early (the queue opens at 9am, sold out by noon). Brisket that earns the wait. If you can only do one Austin meal, this is it.</div>
+            <div class="card-tags"><span class="tag tag-tex">QUEUE FROM 9AM</span><span class="tag tag-amber">BEST BRISKET IN TEXAS</span></div>
+          </div>
+          <div class="card">
+            <span class="card-icon">&#127928;</span>
+            <div class="card-title tex">6th Street</div>
+            <div class="card-body">Austin&rsquo;s legendary live music strip. On any given Tuesday night there are 20+ live acts within a few blocks. The <strong>Driskill Bar</strong> at the 1886 Driskill Hotel for a nightcap &mdash; one of the great bars in Texas.</div>
+            <div class="card-tags"><span class="tag tag-tex">LIVE MUSIC ALL NIGHT</span><span class="tag tag-amber">THE DRISKILL 1886</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag tex">Stay</div>
+      <div class="t-body">
+        <div class="hotel-card lux">
+          <div class="hotel-label">The Landmark</div>
+          <div class="hotel-name tex"><a href="https://www.driskillhotel.com" target="_blank" rel="noopener">The Driskill</a></div>
+          <div class="hotel-location">6th Street, Austin Downtown</div>
+          <div class="hotel-desc">Austin&rsquo;s most storied hotel &mdash; built in 1886 by cattle baron Jesse Driskill, ornate Romanesque lobby, stained glass, longhorn busts. Right on 6th Street. The Driskill Bar is one of the best bars in Texas. The only way to end this trip.</div>
+          <div class="hotel-price">From ~$260/night</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block reveal">
+      <div class="t-tag tex">Day 16<br>Fly Home</div>
+      <div class="t-body"><p>Austin-Bergstrom International Airport (AUS). One-stop back to London Heathrow. Allow 3 hours before departure. <em>Wyoming, Montana, Texas &mdash; it was everything.</em></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ COSTS ═══════════════════ -->
+<section id="s-costs">
+  <div class="day-stripe wy"></div>
+  <div class="section-inner">
+    <span class="section-day reveal" style="color:rgba(74,122,74,0.7)">Trip Costs</span>
+    <h2 class="section-title reveal" style="color:var(--pine3)">Estimated Budget</h2>
+    <p class="section-intro reveal" style="color:rgba(200,232,192,0.75);border-left-color:rgba(74,122,74,0.4)">Estimated costs for two, 4-star accommodation throughout. Flights and car hire are the biggest variables.</p>
+    <div class="reveal" style="overflow-x:auto">
+      <table class="costs-table">
+        <thead><tr><th>Category</th><th>&#128994; Estimated Cost (2 people)</th></tr></thead>
+        <tbody>
+          <tr><td>Flights (2 return &middot; LHR&ndash;JAC &amp; AUS&ndash;LHR, + BZN&ndash;AUS internal)</td><td>&pound;2,400&ndash;&pound;3,200 est.</td></tr>
+          <tr><td>Vehicle (12 days, 4WD SUV &middot; to Bozeman)</td><td>&pound;1,100</td></tr>
+          <tr><td>Hotels (15 nights)</td><td>&pound;3,800</td></tr>
+          <tr><td>Activities &amp; Park Fees</td><td>&pound;800</td></tr>
+          <tr><td>Dining</td><td>&pound;1,500</td></tr>
+          <tr><td>TOTAL ESTIMATED</td><td>&pound;9,900&ndash;&pound;10,700</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip-box reveal" style="margin-top:24px;background:rgba(45,74,45,0.1);border-left-color:var(--pine2)">
+      <div class="tip-label">Booking Directory</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+        <a href="https://www.thecloudveil.com" target="_blank" rel="noopener" class="book-link">The Cloudveil, Jackson Hole</a>
+        <a href="https://www.yellowstonenationalparklodges.com" target="_blank" rel="noopener" class="book-link">Lake Yellowstone Hotel</a>
+        <a href="https://www.irmahotel.com" target="_blank" rel="noopener" class="book-link">The Irma Hotel, Cody</a>
+        <a href="https://www.armstronghotel.com" target="_blank" rel="noopener" class="book-link">Kimpton Armory, Bozeman</a>
+        <a href="https://www.driskillhotel.com" target="_blank" rel="noopener" class="book-link">The Driskill, Austin (nights 1 &amp; 2)</a>
+        <a href="https://texasretreat.com" target="_blank" rel="noopener" class="book-link">The Retreat at Balcones Springs</a>
+        <a href="https://montanaprorodeo.org" target="_blank" rel="noopener" class="book-link">NRA Finals Rodeo (check dates)</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="color:rgba(74,122,74,0.3);letter-spacing:0.5em;margin-bottom:16px">&#10022; &nbsp; &#10022; &nbsp; &#10022;</div>
+  <span class="hl">Big Sky &amp; Bear Country</span> &nbsp;&middot;&nbsp; October 2027 &nbsp;&middot;&nbsp; <span class="gold">Option A &mdash; The Wilderness Route</span><br>
+  <div style="margin-top:8px;font-size:0.6rem;opacity:0.4">Julian &middot; Lianne</div>
+  <div style="margin-top:16px"><a href="../" style="color:rgba(200,232,192,0.4);font-size:0.6rem;letter-spacing:0.2em;text-decoration:none">&#8592; Downing Travels</a></div>
+</footer>
+
+<script>
+window.addEventListener('load', function() {
+  setTimeout(function() { document.getElementById('loader').classList.add('done'); }, 2000);
+});
+
+/* HERO CANVAS — night sky + mountains + stars */
+(function() {
+  var c = document.getElementById('hero-canvas');
+  var ctx = c.getContext('2d');
+  var w = 0, h = 0;
+  function resize() { w = c.width = c.offsetWidth; h = c.height = c.offsetHeight; }
+  resize(); window.addEventListener('resize', resize);
+  var stars = [];
+  for (var i = 0; i < 200; i++) stars.push({ x: Math.random(), y: Math.random() * 0.65, r: Math.random() * 1.4 + 0.3, a: Math.random() * 6.28, spd: 0.003 + Math.random() * 0.005 });
+  var t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, w, h); t += 0.005;
+    var sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, '#020A04'); sky.addColorStop(0.5, '#061008'); sky.addColorStop(1, '#0C1A0C');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+    /* Milky Way glow */
+    var mw = ctx.createLinearGradient(0, 0, w, h * 0.6);
+    mw.addColorStop(0, 'rgba(80,120,80,0)'); mw.addColorStop(0.4, 'rgba(80,120,80,0.06)'); mw.addColorStop(0.6, 'rgba(100,140,80,0.1)'); mw.addColorStop(1, 'rgba(80,120,80,0)');
+    ctx.fillStyle = mw; ctx.fillRect(0, 0, w, h);
+    stars.forEach(function(s) { s.a += s.spd; ctx.beginPath(); ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2); ctx.fillStyle = 'rgba(220,245,220,' + (0.3 + Math.sin(s.a) * 0.35) + ')'; ctx.fill(); });
+    /* Mountain range */
+    ctx.fillStyle = '#0A1A0A';
+    ctx.beginPath(); ctx.moveTo(0, h);
+    ctx.lineTo(0, h * 0.55); ctx.lineTo(w * 0.07, h * 0.3); ctx.lineTo(w * 0.15, h * 0.48); ctx.lineTo(w * 0.25, h * 0.2);
+    ctx.lineTo(w * 0.38, h * 0.42); ctx.lineTo(w * 0.5, h * 0.15); ctx.lineTo(w * 0.62, h * 0.38);
+    ctx.lineTo(w * 0.74, h * 0.22); ctx.lineTo(w * 0.86, h * 0.44); ctx.lineTo(w, h * 0.35); ctx.lineTo(w, h);
+    ctx.closePath(); ctx.fill();
+    /* Snow */
+    ctx.fillStyle = 'rgba(230,245,230,0.75)';
+    [[0.25,0.2,0.22,0.3],[0.5,0.15,0.46,0.27],[0.74,0.22,0.71,0.32]].forEach(function(m) {
+      ctx.beginPath(); ctx.moveTo(m[0]*w,m[1]*h); ctx.lineTo((m[0]-0.04)*w,m[3]*h); ctx.lineTo((m[0]+0.04)*w,m[3]*h); ctx.closePath(); ctx.fill();
+    });
+    /* Pine silhouettes */
+    ctx.fillStyle = '#040E06';
+    [0.02,0.06,0.11,0.17,0.22,0.28,0.34,0.41,0.47,0.53,0.59,0.65,0.71,0.77,0.83,0.89,0.94,0.97].forEach(function(tx, i) {
+      var th = h * (0.16 + (i%3)*0.05); var bx = tx*w; var by = h*0.75;
+      ctx.beginPath(); ctx.moveTo(bx,by-th); ctx.lineTo(bx-th*0.26,by); ctx.lineTo(bx+th*0.26,by); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(bx,by-th*1.35); ctx.lineTo(bx-th*0.18,by-th*0.55); ctx.lineTo(bx+th*0.18,by-th*0.55); ctx.closePath(); ctx.fill();
+    });
+    var grd = ctx.createLinearGradient(0,h*0.72,0,h); grd.addColorStop(0,'#080E08'); grd.addColorStop(1,'#040804');
+    ctx.fillStyle = grd; ctx.fillRect(0,h*0.75,w,h);
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* SCROLL REVEAL */
+var revEls = document.querySelectorAll('.reveal');
+var io = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e, i) { if (e.isIntersecting) { setTimeout(function() { e.target.classList.add('v'); }, i*55); } });
+}, { threshold: 0.08 });
+revEls.forEach(function(el) { io.observe(el); });
+
+/* NAV + TIMELINE */
+var secIds = ['s-hero','s-intro','s-day1','s-day4','s-day8','s-day10','s-day12','s-day13','s-day15','s-costs'];
+var pips = document.querySelectorAll('.nav-pip');
+var tlDots = document.querySelectorAll('.tl-dot');
+var tlFill = document.getElementById('tl-fill');
+var pm = [0,0,1,2,3,4,5,6,7,8];
+function updateNav() {
+  var cur = 0;
+  secIds.forEach(function(id,i){var el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-280)cur=i;});
+  pips.forEach(function(p,i){p.classList.toggle('active',pm[cur]===i);});
+  tlDots.forEach(function(d,i){d.classList.toggle('lit',i<=cur);});
+  var tot = document.body.scrollHeight - window.innerHeight;
+  if (tlFill && tot > 0) tlFill.style.height = (window.scrollY/tot*100) + '%';
+}
+window.addEventListener('scroll', updateNav, {passive:true});
+updateNav();
+</script>
+</body>
+</html>
