@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Deep South Road Trip &middot; October 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bourbon:#7B3F1E;
+  --gold:#C4962A;
+  --sage:#4A6741;
+  --denim:#1A5F8A;
+  --blush:#9B2335;
+  --cream:#FAF7F2;
+  --ivory:#F3EEE6;
+  --white:#FFFFFF;
+  --ink:#1E1E1E;
+  --mid:#4A4A4A;
+  --slate:#6B7280;
+  --border:rgba(196,150,42,0.2);
+  --shadow:rgba(30,20,5,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}
+
+#loading{position:fixed;inset:0;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.8s}
+#loading.done{opacity:0;pointer-events:none}
+.load-icon{font-size:2.5rem;margin-bottom:16px;animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-text{color:#D4A96A;font-family:'Inter',sans-serif;font-size:0.85rem;letter-spacing:0.15em;text-transform:uppercase}
+
+#s-hero{position:relative;height:100vh;min-height:560px;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,5,0,0.38) 0%,rgba(10,5,0,0.22) 50%,rgba(10,5,0,0.55) 100%)}
+.hero-content{position:relative;z-index:2;padding:0 24px}
+.hero-badge{display:inline-block;background:rgba(196,150,42,0.25);border:1px solid rgba(196,150,42,0.5);color:#F0D080;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:18px;backdrop-filter:blur(4px)}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,7vw,5rem);color:#FFFFFF;line-height:1.1;text-shadow:0 2px 20px rgba(0,0,0,0.4);margin-bottom:10px}
+.hero-title em{font-style:italic;color:#F0D080}
+.hero-sub{font-size:0.95rem;color:rgba(255,255,255,0.82);letter-spacing:0.08em;margin-bottom:6px}
+.hero-names{font-size:0.78rem;color:rgba(255,255,255,0.6);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:28px}
+.hero-scroll{display:inline-flex;flex-direction:column;align-items:center;gap:4px;color:rgba(255,255,255,0.55);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;animation:pulse 2.5s ease-in-out infinite}
+.hero-scroll-bar{width:1px;height:32px;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.55))}
+@keyframes pulse{0%,100%{opacity:0.55}50%{opacity:1}}
+
+.nav-dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:8px}
+.nav-pip{width:8px;height:8px;border-radius:50%;background:rgba(100,80,40,0.25);border:1.5px solid rgba(100,80,40,0.4);cursor:pointer;transition:all 0.3s;text-decoration:none;display:block}
+.nav-pip.active{background:var(--gold);border-color:var(--gold);transform:scale(1.35)}
+@media(max-width:600px){.nav-dots{display:none}}
+
+.photo-strip{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -24px 32px;padding:0 24px 10px;scrollbar-width:none}
+.photo-strip::-webkit-scrollbar{display:none}
+.photo-strip-item{flex:0 0 auto;scroll-snap-align:start;border-radius:12px;overflow:hidden;position:relative}
+.photo-strip-item img{display:block;height:180px;width:260px;object-fit:cover;transition:transform 0.4s}
+.photo-strip-item:hover img{transform:scale(1.04)}
+.photo-strip-item .photo-label{position:absolute;bottom:0;left:0;right:0;padding:8px 12px;background:linear-gradient(0deg,rgba(0,0,0,0.65),transparent);color:#fff;font-size:0.72rem;letter-spacing:0.08em;font-family:'Inter',sans-serif}
+.photo-banner{width:100%;height:220px;object-fit:cover;border-radius:14px;margin-bottom:28px;display:block}
+@media(max-width:640px){.photo-banner{height:160px}.photo-strip-item img{height:140px;width:200px}}
+
+.section-inner{max-width:820px;margin:0 auto;padding:64px 24px}
+.section-day{display:inline-block;font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--slate);margin-bottom:10px}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4.5vw,2.8rem);line-height:1.2;margin-bottom:20px}
+.section-title.bourbon{color:var(--bourbon)}
+.section-title.gold{color:var(--gold)}
+.section-title.denim{color:var(--denim)}
+.section-title.blush{color:var(--blush)}
+.section-title.sage{color:var(--sage)}
+.section-intro{font-size:0.97rem;color:var(--mid);line-height:1.7;margin-bottom:32px;max-width:640px}
+.day-stripe{height:4px;background:linear-gradient(90deg,var(--gold),transparent)}
+
+.card{background:var(--white);border-radius:12px;padding:18px 20px;box-shadow:0 2px 12px var(--shadow);position:relative;transition:transform 0.25s,box-shadow 0.25s}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--shadow)}
+.card-icon{font-size:1.4rem;margin-bottom:8px;display:block}
+.card-title{font-weight:600;font-size:0.95rem;color:var(--ink);margin-bottom:6px}
+.card-title a{color:inherit;text-decoration:none}
+.card-title a:hover{color:var(--bourbon)}
+.card-body{font-size:0.85rem;color:var(--mid);line-height:1.65}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:640px){.g2,.g3{grid-template-columns:1fr}}
+
+.tag{display:inline-block;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;font-weight:600}
+.tag-r{background:rgba(123,63,30,0.1);color:var(--bourbon)}
+.tag-g{background:rgba(74,103,65,0.1);color:var(--sage)}
+.tag-o{background:rgba(196,150,42,0.12);color:#9A7020}
+.tag-b{background:rgba(26,95,138,0.1);color:var(--denim)}
+.tag-p{background:rgba(155,35,53,0.1);color:var(--blush)}
+
+.time-block{display:flex;gap:16px;margin-bottom:22px;align-items:flex-start}
+.t-tag{min-width:68px;text-align:center;font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--bourbon);border-top:2px solid var(--bourbon);padding-top:6px;line-height:1.4}
+.t-body{flex:1}
+.t-body p{font-size:0.88rem;color:var(--mid);line-height:1.65;margin-bottom:10px}
+
+.hotel-choice{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+@media(max-width:580px){.hotel-choice{grid-template-columns:1fr}}
+.hotel-card{border-radius:14px;padding:18px;border:1.5px solid var(--border);background:var(--white);position:relative;overflow:hidden}
+.hotel-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.hotel-card.mid::before{background:var(--sage)}
+.hotel-card.lux::before{background:linear-gradient(90deg,var(--gold),#E8C060)}
+.hotel-label{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.hotel-card.mid .hotel-label{color:var(--sage)}
+.hotel-card.lux .hotel-label{color:var(--gold)}
+.hotel-name{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:4px;color:var(--ink)}
+.hotel-name a{color:inherit;text-decoration:none}
+.hotel-name a:hover{color:var(--bourbon)}
+.hotel-location{font-size:0.75rem;color:var(--slate);margin-bottom:8px}
+.hotel-desc{font-size:0.82rem;color:var(--mid);line-height:1.6;margin-bottom:10px}
+.hotel-price{font-size:0.78rem;font-weight:600;color:var(--bourbon)}
+
+.tip-box{background:rgba(196,150,42,0.08);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:14px 18px;margin:20px 0;font-size:0.84rem;color:var(--mid);line-height:1.65}
+.tip-box strong{color:var(--ink)}
+
+.decision-box{background:rgba(26,95,138,0.06);border:1.5px dashed rgba(26,95,138,0.35);border-radius:12px;padding:16px 20px;margin:24px 0;font-size:0.84rem;color:var(--mid);line-height:1.65}
+.decision-box .decision-head{font-weight:700;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--denim);margin-bottom:8px}
+
+.wedding-box{background:rgba(155,35,53,0.06);border:1.5px solid rgba(155,35,53,0.25);border-radius:12px;padding:16px 20px;margin:24px 0;text-align:center}
+.wedding-box .wb-icon{font-size:2rem;margin-bottom:6px;display:block}
+.wedding-box .wb-title{font-family:'Dancing Script',cursive;font-size:1.5rem;color:var(--blush);margin-bottom:4px}
+.wedding-box .wb-sub{font-size:0.8rem;color:var(--slate);letter-spacing:0.06em}
+
+.divider{border:none;border-top:1px solid var(--border);margin:32px 0}
+
+/* ===== TABS ===== */
+.tabs-wrap{background:var(--ivory);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:80}
+.tabs{max-width:820px;margin:0 auto;padding:0 24px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:0 0 auto;padding:14px 18px;font-size:0.78rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--slate);cursor:pointer;border:none;background:none;border-bottom:2.5px solid transparent;transition:all 0.25s;white-space:nowrap}
+.tab-btn.active{color:var(--bourbon);border-bottom-color:var(--bourbon)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* ===== SECTION BACKGROUNDS ===== */
+.s-alt{background:var(--ivory)}
+
+/* ===== REVEAL ===== */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 0.6s,transform 0.6s}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== LEG HEADER ===== */
+.leg-header{display:flex;align-items:center;gap:14px;margin-bottom:32px;padding:20px 24px;border-radius:14px;background:var(--white);box-shadow:0 2px 12px var(--shadow)}
+.leg-num{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;flex-shrink:0}
+.leg-num.l1{background:rgba(123,63,30,0.12);color:var(--bourbon)}
+.leg-num.l2{background:rgba(26,95,138,0.12);color:var(--denim)}
+.leg-num.l3{background:rgba(155,35,53,0.12);color:var(--blush)}
+.leg-info{flex:1}
+.leg-title{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--ink);margin-bottom:3px}
+.leg-sub{font-size:0.78rem;color:var(--slate)}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="load-icon">&#9883;</div>
+  <div class="load-text">Loading your itinerary&hellip;</div>
+</div>
+
+<nav class="nav-dots" aria-label="Section navigation">
+  <a class="nav-pip active" href="#s-hero" title="Top"></a>
+  <a class="nav-pip" href="#s-overview" title="Overview"></a>
+  <a class="nav-pip" href="#s-leg1" title="Texas"></a>
+  <a class="nav-pip" href="#s-leg2" title="Louisiana"></a>
+  <a class="nav-pip" href="#s-leg3" title="Tennessee"></a>
+</nav>
+
+<!-- HERO -->
+<section id="s-hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">October 2027 &middot; 14 Nights</div>
+    <h1 class="hero-title">Texas, <em>Louisiana</em><br>&amp; Tennessee</h1>
+    <p class="hero-sub">Austin &rarr; Marble Falls &rarr; Natchez &rarr; New Orleans &rarr; Nashville &rarr; Memphis</p>
+    <p class="hero-names">Julian &middot; Lianne</p>
+    <div class="hero-scroll" onclick="document.getElementById('s-overview').scrollIntoView({behavior:'smooth'})">
+      <div class="hero-scroll-bar"></div>
+      <span>Explore</span>
+    </div>
+  </div>
+</section>
+
+<!-- OVERVIEW TAB SECTION -->
+<section id="s-overview" class="s-alt">
+  <div class="section-inner">
+    <span class="section-day">The Plan</span>
+    <h2 class="section-title gold">Three States. Three Legs.</h2>
+    <p class="section-intro">A wedding in the Texas Hill Country opens a road trip through some of America&rsquo;s most musical, culinary and atmospheric cities &mdash; finishing on Beale Street in Memphis. Or cut the trip short after New Orleans if 14 nights is too much &mdash; that&rsquo;s a natural break point.</p>
+
+    <div class="tabs-wrap" style="position:relative;background:transparent;border-bottom:1px solid var(--border);margin-bottom:28px">
+      <div class="tabs" style="padding:0">
+        <button class="tab-btn active" onclick="switchTab(this,'tab-list')">Overview</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-map')">Route &amp; Logistics</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-pack')">Packing &amp; Tips</button>
+      </div>
+    </div>
+
+    <div class="tab-panel active" id="tab-list">
+      <div style="display:grid;gap:12px">
+
+        <div class="card reveal" style="border-left:3px solid var(--bourbon)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-size:1.2rem">&#10022;</span>
+            <div>
+              <div class="card-title">Leg 1 &mdash; Texas (Nights 1&ndash;5)</div>
+              <div style="font-size:0.75rem;color:var(--slate)">Austin &rarr; Marble Falls &middot; Hill Country &middot; Will &amp; Kylie&rsquo;s wedding</div>
+            </div>
+          </div>
+          <div class="card-body">Arrive into Austin for a day in the city &mdash; live music on 6th Street, breakfast tacos, the Colorado River. Then drive 90 minutes northwest into the Hill Country for Marble Falls, the wedding weekend, and the kind of Texas that doesn&rsquo;t make it onto postcards: limestone bluffs, wildflowers, wineries, and a proper slow pace.</div>
+        </div>
+
+        <div class="card reveal" style="border-left:3px solid var(--denim)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-size:1.2rem">&#127754;</span>
+            <div>
+              <div class="card-title">Leg 2 &mdash; Louisiana (Nights 6&ndash;9)</div>
+              <div style="font-size:0.75rem;color:var(--slate)">Natchez overnight &rarr; New Orleans &middot; Swamp &middot; Jazz &middot; Food</div>
+            </div>
+          </div>
+          <div class="card-body">Drive east through Mississippi with an overnight in Natchez &mdash; antebellum mansions on a bluff above the river, genuinely atmospheric. Then New Orleans: three nights for the French Quarter, a Honey Island swamp tour with alligators (October is perfect timing), Creole food, and jazz till late. This leg alone justifies the trip.</div>
+        </div>
+
+        <div class="card reveal" style="border-left:3px solid var(--blush)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-size:1.2rem">&#9835;</span>
+            <div>
+              <div class="card-title">Leg 3 &mdash; Tennessee (Nights 10&ndash;14)</div>
+              <div style="font-size:0.75rem;color:var(--slate)">Nashville &rarr; Memphis &middot; Country music &middot; Graceland &middot; BBQ</div>
+            </div>
+          </div>
+          <div class="card-body">Up through Tennessee for the music road trip finale. Nashville for honky tonks and hot chicken, then Memphis for Graceland, Beale Street blues, and the best BBQ ribs in the world. Fly home from Memphis.</div>
+        </div>
+
+        <div class="decision-box reveal">
+          <div class="decision-head">&#9998; Decision Point &mdash; After New Orleans (Night 9)</div>
+          If 14 nights feels like a stretch, New Orleans is the natural cut-off. It&rsquo;s a major hub with direct transatlantic flights, the trip has a complete arc by that point, and Nashville/Memphis can always anchor a future trip.
+        </div>
+
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-map">
+      <div class="card reveal" style="margin-bottom:16px">
+        <div class="card-title">&#9992; Flights</div>
+        <div class="card-body">
+          <strong>In:</strong> Boston (BOS) &rarr; Austin (AUS) &mdash; direct on American or Southwest, ~3.5 hrs<br><br>
+          <strong>Out (full trip):</strong> Memphis (MEM) &rarr; London Heathrow &mdash; usually one stop (Atlanta or Charlotte). Delta via ATL is the easiest connection.<br><br>
+          <strong>Out (if cutting at NOLA):</strong> New Orleans (MSY) &rarr; London Heathrow &mdash; BA or Virgin via New York, or Delta via ATL.
+        </div>
+      </div>
+      <div class="card reveal" style="margin-bottom:16px">
+        <div class="card-title">&#128663; Driving</div>
+        <div class="card-body">
+          Hire a car in Austin, return in Memphis (or NOLA if cutting early). One-way hire is straightforward for major US operators &mdash; book early, prices vary wildly. The drives are all highway-comfortable with things to stop for en route:<br><br>
+          Austin &rarr; Marble Falls: ~65 miles, ~90 mins (northwest on US-183 / TX-71)<br>
+          Marble Falls &rarr; Natchez: ~430 miles, ~6.5 hrs &mdash; break the drive in San Antonio or stop for lunch<br>
+          Natchez &rarr; New Orleans: 170 miles, ~2.5 hrs<br>
+          New Orleans &rarr; Nashville: 480 miles, ~7 hrs &mdash; long day, see below<br>
+          Nashville &rarr; Memphis: 210 miles, ~3 hrs
+        </div>
+      </div>
+      <div class="tip-box reveal">
+        <strong>NOLA &rarr; Nashville drive:</strong> This is the one long haul. Break it in Mississippi &mdash; Jackson is the obvious midpoint &mdash; or take a direct flight (Southwest flies it for under $100 and takes 1 hr 10 mins). Flying frees up a day for Nashville, which is worth having.
+      </div>
+      <div class="card reveal">
+        <div class="card-title">&#127777; October in the South</div>
+        <div class="card-body">
+          Ideal timing. Texas Hill Country: 70&ndash;80&deg;F, clear skies, start of fall colour. Louisiana: hot season breaking, humidity dropping, still warm (mid-70s). Swamp tours at their best &mdash; alligators active, mosquitoes less so. Tennessee: crisp and colourful, 60&ndash;70&deg;F. Outdoor dining everywhere is excellent this time of year.
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-pack">
+      <div class="grid g2 reveal">
+        <div class="card">
+          <div class="card-icon">&#128085;</div>
+          <div class="card-title">What to Wear</div>
+          <div class="card-body">Layers. Texas days can hit 80&deg;F but October evenings in Nashville dip to 50&deg;F. A light jacket is essential. Smart-casual for Nashville &amp; Memphis bars. One outfit for the wedding. Comfortable walking shoes throughout &mdash; New Orleans streets are uneven.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128248;</div>
+          <div class="card-title">Don&rsquo;t Miss</div>
+          <div class="card-body">Book Honey Island Swamp tour in advance &mdash; small group sizes. Graceland tickets online to skip queues. Reserve at Commander&rsquo;s Palace (NOLA) a week ahead minimum. Beale Street is walk-in, Ryman Auditorium shows sell out.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128664;</div>
+          <div class="card-title">Car Hire Tips</div>
+          <div class="card-body">Full-size SUV or large sedan &mdash; three people, luggage, and long highway miles. Book one-way Austin &rarr; Memphis (or NOLA). Enterprise and Hertz are the most reliable for one-ways. Consider a SiriusXM radio trial for the road.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#127869;</div>
+          <div class="card-title">Food Musts</div>
+          <div class="card-body">Austin: breakfast tacos &amp; Franklin BBQ (queue early). Marble Falls: Flat Creek Estate Winery or a lakeside lunch. NOLA: beignets at Caf&eacute; Du Monde, po&rsquo;boys, Commander&rsquo;s Palace brunch. Nashville: hot chicken at Prince&rsquo;s. Memphis: Rendezvous ribs or Central BBQ.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEG 1: TEXAS -->
+<section id="s-leg1">
+  <div class="section-inner">
+
+    <div class="leg-header reveal">
+      <div class="leg-num l1">I</div>
+      <div class="leg-info">
+        <div class="leg-title">Texas &mdash; Austin &amp; the Hill Country</div>
+        <div class="leg-sub">Nights 1&ndash;5 &middot; Arrive Austin &middot; Marble Falls &middot; Will &amp; Kylie&rsquo;s Wedding</div>
+      </div>
+    </div>
+
+    <!-- DAY 1 -->
+    <div class="day-stripe"></div>
+    <div style="padding:32px 0 0">
+      <span class="section-day">Day 1</span>
+      <h2 class="section-title bourbon">Austin Arrives</h2>
+      <p class="section-intro">Land, decompress, and ease into the city at your own pace. Austin is one of the most laid-back arrivals you can make &mdash; no grand agenda, just good food, live music in the evening, and a proper night&rsquo;s sleep.</p>
+
+      <img class="photo-banner reveal" src="https://images.unsplash.com/photo-1531218150217-54595bc2b934?w=1200&h=440&fit=crop&auto=format" alt="Austin Texas skyline" loading="lazy">
+
+      <div class="time-block reveal">
+        <div class="t-tag">Afternoon</div>
+        <div class="t-body">
+          <p><strong>Arrive Austin-Bergstrom (AUS).</strong> Collect hire car. Check in and drop bags. The drive from the airport into downtown is 15 minutes &mdash; no stress.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Late Afternoon</div>
+        <div class="t-body">
+          <p><strong>South Congress Avenue (SoCo).</strong> A gentle wander &mdash; independent shops, vintage stores, food trucks. Grab a margarita and a table outside. Jo&rsquo;s Coffee has the famous &ldquo;I Love You So Much&rdquo; mural worth a stop.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Dusk</div>
+        <div class="t-body">
+          <p><strong>Congress Avenue Bridge bat colony.</strong> One of the great free spectacles in America &mdash; 1.5 million Mexican free-tailed bats emerge from under the bridge at dusk in a continuous dark ribbon for 20&ndash;30 minutes. October is still prime season before they migrate south. Get there 20 minutes early and watch from the bridge or the grassy bank below. Completely unmissable.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Evening</div>
+        <div class="t-body">
+          <p><strong>6th Street or Rainey Street.</strong> Austin&rsquo;s live music scene is genuinely world-class. Wander the honky tonks and dive bars on 6th Street, or the converted bungalows of Rainey Street for something slightly more grown-up. Grab dinner at Uchi (high-end Japanese) or keep it casual with tacos anywhere.</p>
+        </div>
+      </div>
+
+      <div class="hotel-choice reveal">
+        <div class="hotel-card mid">
+          <div class="hotel-label">Smart Choice</div>
+          <div class="hotel-name"><a href="https://www.hotelvanburen.com" target="_blank">Hotel Van Buren</a></div>
+          <div class="hotel-location">Austin Downtown</div>
+          <div class="hotel-desc">Boutique hotel on West 6th, sharp design, rooftop pool. Walking distance to everything. Great base for two or three nights without needing the car in the city.</div>
+          <div class="hotel-price">From ~$200/night</div>
+        </div>
+        <div class="hotel-card lux">
+          <div class="hotel-label">The Landmark</div>
+          <div class="hotel-name"><a href="https://www.driskillhotel.com" target="_blank">The Driskill</a></div>
+          <div class="hotel-location">6th Street, Austin Downtown</div>
+          <div class="hotel-desc">Austin&rsquo;s most storied hotel &mdash; built in 1886 by cattle baron Jesse Driskill, ornate Romanesque lobby, stained glass, longhorn busts. Right on 6th Street. The Driskill Bar is one of the best bars in Texas. If you&rsquo;re spending two nights in Austin, this is the one to do it in.</div>
+          <div class="hotel-price">From ~$260/night</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="day-stripe" style="margin-top:32px"></div>
+    <div style="padding:32px 0 0">
+      <span class="section-day">Day 2</span>
+      <h2 class="section-title bourbon">Austin Proper</h2>
+      <p class="section-intro">The full Austin day. Breakfast tacos, the Capitol, the river, and live music again in the evening. This is one of America&rsquo;s most enjoyable cities to just wander.</p>
+
+      <img class="photo-banner reveal" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=440&fit=crop&auto=format" alt="Austin live music" loading="lazy">
+
+      <div class="time-block reveal">
+        <div class="t-tag">Morning</div>
+        <div class="t-body">
+          <p><strong>Breakfast tacos</strong> at Veracruz All Natural or Tacodeli &mdash; a genuine Austin institution. Then <strong>Texas State Capitol</strong> &mdash; worth going in, the rotunda is impressive and it&rsquo;s free.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Midday</div>
+        <div class="t-body">
+          <p><strong>Franklin Barbecue</strong> if you&rsquo;re committed (queue from 8am, opens at 11, sells out by 1pm &mdash; it&rsquo;s worth it once in a lifetime). Or try La Barbecue for a shorter wait and equally serious brisket.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Afternoon</div>
+        <div class="t-body">
+          <p><strong>Barton Springs Pool</strong> &mdash; a spring-fed swimming pool in Zilker Park, one of Austin&rsquo;s great pleasures. 68&deg;F year-round, outdoors, beautiful. Then a walk or bike along the <strong>Ann and Roy Butler Hike-and-Bike Trail</strong> around Lady Bird Lake.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Evening</div>
+        <div class="t-body">
+          <p><strong>Continental Club or Stubb&rsquo;s</strong> for live music. Dinner on South Congress or East Austin &mdash; the east side has the best new restaurants right now. Try Launderette, Emmer &amp; Rye, or Comedor for something special.</p>
+        </div>
+      </div>
+
+      <div class="tip-box reveal">
+        <strong>Art detour:</strong> The Blanton Museum of Art on the UT campus is excellent and free on Thursdays. The &ldquo;Ellsworth Kelly: Austin&rdquo; building in the grounds is one of the most quietly extraordinary things in America.
+      </div>
+    </div>
+
+    <!-- DAY 3 -->
+    <div class="day-stripe" style="margin-top:32px"></div>
+    <div style="padding:32px 0 0">
+      <span class="section-day">Day 3</span>
+      <h2 class="section-title bourbon">Into the Hill Country</h2>
+      <p class="section-intro">Ninety minutes northwest of Austin, the landscape shifts completely &mdash; limestone bluffs, cedar and pecan, the Highland Lakes chain, and small towns at a proper Texas pace. Marble Falls is the wedding base, beautifully set on Lake Marble Falls with the Hill Country all around.</p>
+
+      <img class="photo-banner reveal" src="https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=1200&h=440&fit=crop&auto=format" alt="Texas Hill Country" loading="lazy">
+
+      <div class="time-block reveal">
+        <div class="t-tag">Morning</div>
+        <div class="t-body">
+          <p><strong>Check out of Austin.</strong> Drive northwest ~65 miles to Marble Falls &mdash; about 90 minutes on US-183 and TX-71. Easy, scenic drive through the Hill Country. No detours needed: the road itself is the experience.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Afternoon</div>
+        <div class="t-body">
+          <p><strong>Arrive Marble Falls.</strong> Check in, decompress. Marble Falls sits on the Colorado River arm of Lake LBJ and Lake Marble Falls &mdash; genuinely beautiful Hill Country lake country. Stroll the lakefront, or head out to <strong>Flat Creek Estate Winery</strong> or <strong>Fall Creek Vineyards</strong> for an afternoon tasting &mdash; both are excellent and close by.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Evening</div>
+        <div class="t-body">
+          <p>Quiet dinner in Marble Falls or at the venue. The next two days are wedding weekend &mdash; save energy.</p>
+        </div>
+      </div>
+
+      <div class="hotel-choice reveal">
+        <div class="hotel-card mid">
+          <div class="hotel-label">Good Value</div>
+          <div class="hotel-name">The Retreat at Balcones Springs</div>
+          <div class="hotel-location">104 Balcones Springs Drive, Marble Falls TX 78654</div>
+          <div class="hotel-desc">The wedding venue itself &mdash; Balcones Springs has on-site cabins and accommodation for wedding guests. Staying on the property means no driving after the reception, full access to the grounds, and waking up in the Hill Country the morning after. Book directly through the venue as a wedding guest.</div>
+          <div class="hotel-price">From ~$250/night total</div>
+        </div>
+        <div class="hotel-card lux">
+          <div class="hotel-label">Splurge</div>
+          <div class="hotel-name"><a href="https://www.magnoliameetingplace.com" target="_blank">Magnolea &mdash; or local ranch stay</a></div>
+          <div class="hotel-location">Marble Falls, TX</div>
+          <div class="hotel-desc">If on-site accommodation is full or unavailable, Marble Falls town has several lakeside hotels: <strong>Marina Bar &amp; Grill Motel</strong> and <strong>Badu House</strong> (if renovated) are worth checking; also look at VRBO lakeside rentals for something with a view and outdoor space.</div>
+          <div class="hotel-price">From ~$350/night</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAYS 4-5: WEDDING -->
+    <div class="day-stripe" style="margin-top:32px"></div>
+    <div style="padding:32px 0 0">
+      <span class="section-day">Days 4 &amp; 5</span>
+      <h2 class="section-title bourbon">Wedding Weekend</h2>
+      <p class="section-intro">The reason you&rsquo;re here. Two days anchored around Will &amp; Kylie&rsquo;s wedding &mdash; with the Hill Country as the backdrop and the freedom to enjoy the day before and after at your own pace.</p>
+
+      <div class="wedding-box reveal">
+        <span class="wb-icon">&#128140;</span>
+        <div class="wb-title">Will &amp; Kylie</div>
+        <div class="wb-sub">The Retreat at Balcones Springs &middot; Marble Falls, Texas &middot; 27&ndash;28 October 2027</div>
+      </div>
+
+      <div class="tip-box reveal">
+        <strong>Day before the wedding:</strong> Keep it relaxed. A winery visit, a walk around the Balcones Springs grounds, or just a long lakeside lunch. You want to arrive at the wedding refreshed, not frazzled from sightseeing.
+      </div>
+
+      <div class="tip-box reveal">
+        <strong>Day after the wedding:</strong> A slow morning is earned. Brunch somewhere, maybe a final Hill Country drive before heading east toward Natchez the following day.
+      </div>
+
+      <div class="tip-box reveal">
+        <strong>Practical note:</strong> Once the wedding date is confirmed, lock in accommodation early &mdash; Hill Country gets booked up around events, especially in October when it&rsquo;s peak season.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LEG 2: LOUISIANA -->
+<section id="s-leg2" class="s-alt">
+  <div class="section-inner">
+
+    <div class="leg-header reveal">
+      <div class="leg-num l2">II</div>
+      <div class="leg-info">
+        <div class="leg-title">Louisiana &mdash; Natchez &amp; New Orleans</div>
+        <div class="leg-sub">Nights 6&ndash;9 &middot; Mississippi River &middot; Swamp &middot; French Quarter &middot; Jazz</div>
+      </div>
+    </div>
+
+    <!-- DAY 6: NATCHEZ -->
+    <div class="day-stripe"></div>
+    <div style="padding:32px 0 0">
+      <span class="section-day">Day 6</span>
+      <h2 class="section-title denim">Natchez on the Bluff</h2>
+      <p class="section-intro">The drive east from Blanco takes most of the day. Natchez is the overnight stop &mdash; one of the oldest European settlements in the Mississippi valley, sitting on a dramatic bluff above the river. Antebellum mansions, Spanish moss, and a completely different atmosphere from Texas.</p>
+
+      <img class="photo-banner reveal" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=440&fit=crop&auto=format" alt="Mississippi River at dusk" loading="lazy">
+
+      <div class="time-block reveal">
+        <div class="t-tag">Morning</div>
+        <div class="t-body">
+          <p><strong>Check out of Marble Falls.</strong> Drive east ~430 miles to Natchez. Break somewhere in San Antonio or further along in Louisiana for lunch. The drive is highway all the way &mdash; put SiriusXM on and enjoy it.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Evening</div>
+        <div class="t-body">
+          <p><strong>Arrive Natchez.</strong> Walk to the <strong>Grand Village bluff overlook</strong> for the Mississippi sunset &mdash; the river is vast here, and the view explains everything about why this town mattered. Dinner at <strong>Pearl Street Pasta</strong> or <strong>Cotton Alley Cafe</strong>, both reliable and atmospheric.</p>
+        </div>
+      </div>
+
+      <div class="hotel-choice reveal">
+        <div class="hotel-card lux">
+          <div class="hotel-label">One Night, Make It Count</div>
+          <div class="hotel-name"><a href="https://www.monmouthhistoricinn.com" target="_blank">Monmouth Historic Inn</a></div>
+          <div class="hotel-location">Natchez, MS</div>
+          <div class="hotel-desc">An antebellum mansion turned inn &mdash; 1818 Greek Revival, 30 acres, evening cocktails on the verandah. Wildly atmospheric for one night. This is exactly what Natchez is for.</div>
+          <div class="hotel-price">From ~$200/night</div>
+        </div>
+        <div class="hotel-card mid">
+          <div class="hotel-label">Practical Choice</div>
+          <div class="hotel-name">Natchez Grand Hotel</div>
+          <div class="hotel-location">Natchez, MS</div>
+          <div class="hotel-desc">Central, comfortable, easy parking. A good base if you&rsquo;re arriving late and just need somewhere solid to sleep before pushing on to New Orleans in the morning.</div>
+          <div class="hotel-price">From ~$120/night</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAYS 7-9: NEW ORLEANS -->
+    <div class="day-stripe" style="margin-top:32px"></div>
+    <div style="padding:32px 0 0">
+      <span class="section-day">Days 7&ndash;9</span>
+      <h2 class="section-title denim">New Orleans</h2>
+      <p class="section-intro">Three nights in one of the world&rsquo;s great cities. New Orleans doesn&rsquo;t do half measures &mdash; the food is extraordinary, the music is everywhere, and the swamp is right on the doorstep. October is the best month to come.</p>
+
+      <img class="photo-banner reveal" src="https://images.unsplash.com/photo-1568694618027-1aae58fe9d5e?w=1200&h=440&fit=crop&auto=format" alt="New Orleans French Quarter" loading="lazy">
+
+      <div class="time-block reveal">
+        <div class="t-tag">Day 7</div>
+        <div class="t-body">
+          <p><strong>Arrive NOLA.</strong> Drive from Natchez is 2.5 hrs, easy morning run. Check in, then walk the <strong>French Quarter</strong>: Jackson Square, St Louis Cathedral, Royal Street galleries, Bourbon Street (once, briefly). Lunch at <strong>Central Grocery</strong> for a muffuletta &mdash; the original and still the best. Evening: <strong>Frenchmen Street</strong> for live jazz in small clubs, which is far better than Bourbon Street.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Day 8</div>
+        <div class="t-body">
+          <p><strong>Honey Island Swamp Tour</strong> &mdash; half day, morning departure. One of the best wildlife experiences available from any American city. October is ideal: alligators active and numerous, humidity dropping, Spanish moss at its most atmospheric. Book Dr Wagner&rsquo;s Honey Island Swamp Tours in advance &mdash; small boats, knowledgeable guides. Afternoon: <strong>Garden District</strong> walk, Commander&rsquo;s Palace for a legendary late lunch or early dinner (book ahead).</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Day 9</div>
+        <div class="t-body">
+          <p><strong>Slow morning.</strong> Beignets at <strong>Caf&eacute; Du Monde</strong>, then the <strong>NOMA</strong> (New Orleans Museum of Art) in City Park if you want culture, or a streetcar ride up St Charles Avenue for architecture. Final evening: <strong>Arnaud&rsquo;s</strong> or <strong>Galatoire&rsquo;s</strong> for classic Creole &mdash; jacket required, worth it.</p>
+        </div>
+      </div>
+
+      <div class="decision-box reveal">
+        <div class="decision-head">&#9998; Decision Point &mdash; Cut the trip here?</div>
+        New Orleans has direct transatlantic options (BA and Virgin via New York; Delta via Atlanta). If 9 nights feels like a natural ending, this is the cleanest break. The trip is complete as a story: Texas wedding, Mississippi River, Louisiana in full. Nashville and Memphis are a bonus chapter, not a requirement.
+      </div>
+
+      <div class="hotel-choice reveal">
+        <div class="hotel-card mid">
+          <div class="hotel-label">French Quarter Character</div>
+          <div class="hotel-name"><a href="https://www.hotelmonteleone.com" target="_blank">Hotel Monteleone</a></div>
+          <div class="hotel-location">Royal Street, French Quarter</div>
+          <div class="hotel-desc">A New Orleans institution &mdash; 1886, Literary Arts bar (a carousel bar that rotates), central Royal Street location. Three nights here puts you in the heart of everything. Tennessee Williams and Truman Capote both stayed here.</div>
+          <div class="hotel-price">From ~$220/night</div>
+        </div>
+        <div class="hotel-card lux">
+          <div class="hotel-label">The Splurge</div>
+          <div class="hotel-name"><a href="https://www.rooseveltneworleans.com" target="_blank">The Roosevelt New Orleans</div>
+          <div class="hotel-location">Waldorf Astoria, CBD</div>
+          <div class="hotel-desc">Grand 1893 hotel, Sazerac Bar for cocktails, Domenica for Italian, rooftop pool. A short walk from the Quarter but a level above in scale and comfort. The lobby alone is worth a look.</div>
+          <div class="hotel-price">From ~$320/night</div>
+        </div>
+      </div>
+
+      <div class="photo-strip reveal">
+        <div class="photo-strip-item">
+          <img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=520&h=360&fit=crop&auto=format" alt="Honey Island swamp alligator" loading="lazy">
+          <div class="photo-label">Honey Island Swamp</div>
+        </div>
+        <div class="photo-strip-item">
+          <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=520&h=360&fit=crop&auto=format" alt="Frenchmen Street jazz" loading="lazy">
+          <div class="photo-label">Frenchmen Street</div>
+        </div>
+        <div class="photo-strip-item">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=520&h=360&fit=crop&auto=format" alt="New Orleans food" loading="lazy">
+          <div class="photo-label">Creole cuisine</div>
+        </div>
+        <div class="photo-strip-item">
+          <img src="https://images.unsplash.com/photo-1516900448138-898720b936c7?w=520&h=360&fit=crop&auto=format" alt="Cafe Du Monde beignets" loading="lazy">
+          <div class="photo-label">Caf&eacute; Du Monde</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LEG 3: TENNESSEE -->
+<section id="s-leg3">
+  <div class="section-inner">
+
+    <div class="leg-header reveal">
+      <div class="leg-num l3">III</div>
+      <div class="leg-info">
+        <div class="leg-title">Tennessee &mdash; Nashville &amp; Memphis</div>
+        <div class="leg-sub">Nights 10&ndash;14 &middot; Country Music &middot; Graceland &middot; Beale Street &middot; BBQ</div>
+      </div>
+    </div>
+
+    <!-- DAYS 10-11: NASHVILLE -->
+    <div class="day-stripe"></div>
+    <div style="padding:32px 0 0">
+      <span class="section-day">Days 10 &amp; 11</span>
+      <h2 class="section-title blush">Nashville</h2>
+      <p class="section-intro">The Music City leg. Two nights for honky tonks, hot chicken, and the Ryman Auditorium &mdash; the &ldquo;Mother Church of Country Music&rdquo; and one of the best small venues in the world. Nashville has changed enormously in recent years but the bones are still great.</p>
+
+      <img class="photo-banner reveal" src="https://images.unsplash.com/photo-1545386198-b3cd45f1b22a?w=1200&h=440&fit=crop&auto=format" alt="Nashville neon Broadway" loading="lazy">
+
+      <div class="tip-box reveal">
+        <strong>NOLA to Nashville:</strong> Strongly consider flying this leg &mdash; Southwest or Delta do it in just over an hour for under $100. The drive is 7+ hours and doesn&rsquo;t add much to the trip. Flying gives you an extra day in Nashville and a painless transition.
+      </div>
+
+      <div class="time-block reveal">
+        <div class="t-tag">Day 10</div>
+        <div class="t-body">
+          <p>Arrive Nashville. <strong>Lower Broadway honky tonks</strong> for the full immersion &mdash; Robert&rsquo;s Western World is the real deal among the tourist bars. Afternoon: <strong>Country Music Hall of Fame</strong> &mdash; genuinely excellent museum, full day if you&rsquo;re into it or a couple of hours if not. Evening: <strong>Ryman Auditorium</strong> show if anything is on (check listings early &mdash; it sells out).</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Day 11</div>
+        <div class="t-body">
+          <p><strong>Hot chicken</strong> at Prince&rsquo;s Nashville Hot Chicken for lunch &mdash; the original, no debate. Morning: <strong>The Gulch</strong> neighbourhood for coffee and the &ldquo;What Lifts You&rdquo; angel wings mural. Afternoon: <strong>Belle Meade</strong> historic plantation and winery, or <strong>The Parthenon</strong> in Centennial Park (a full-scale replica, genuinely odd and worth seeing). Evening: 12South neighbourhood for dinner &mdash; Burger Up or The Silly Goose for something relaxed.</p>
+        </div>
+      </div>
+
+      <div class="hotel-choice reveal">
+        <div class="hotel-card mid">
+          <div class="hotel-label">Downtown Buzz</div>
+          <div class="hotel-name"><a href="https://www.graduatehotels.com/nashville" target="_blank">Graduate Nashville</a></div>
+          <div class="hotel-location">Vanderbilt Area</div>
+          <div class="hotel-desc">Collegiate-cool boutique hotel near Vanderbilt. Rooftop bar with skyline views, walkable neighbourhood, good value. A short Uber from Broadway without the noise of downtown.</div>
+          <div class="hotel-price">From ~$180/night</div>
+        </div>
+        <div class="hotel-card lux">
+          <div class="hotel-label">Style Pick</div>
+          <div class="hotel-name"><a href="https://www.thompsonhotels.com/hotels/nashville" target="_blank">Thompson Nashville</a></div>
+          <div class="hotel-location">The Gulch</div>
+          <div class="hotel-desc">The design hotel of the moment in Nashville &mdash; rooftop pool, excellent restaurant, The Gulch location is walkable and cool without being on Broadway. Worth it if you want the stay to feel as good as the city.</div>
+          <div class="hotel-price">From ~$280/night</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAYS 12-14: MEMPHIS -->
+    <div class="day-stripe" style="margin-top:32px"></div>
+    <div style="padding:32px 0 0">
+      <span class="section-day">Days 12&ndash;14</span>
+      <h2 class="section-title blush">Memphis &amp; Graceland</h2>
+      <p class="section-intro">The finale. Memphis is rawer and more lived-in than Nashville, and better for it. Graceland is unmissable even if you&rsquo;re not an Elvis fan. And the BBQ here is a legitimate argument for flying specifically to Memphis and eating nothing else.</p>
+
+      <img class="photo-banner reveal" src="https://images.unsplash.com/photo-1564419320461-6870880221ad?w=1200&h=440&fit=crop&auto=format" alt="Beale Street Memphis" loading="lazy">
+
+      <div class="time-block reveal">
+        <div class="t-tag">Day 12</div>
+        <div class="t-body">
+          <p><strong>Drive Nashville &rarr; Memphis</strong>, 3 hours, easy. <strong>Graceland</strong> in the afternoon &mdash; allow 2&ndash;3 hours for the full tour including the Jungle Room, the grave, and the car museum. It&rsquo;s kitsch and moving in equal measure. Evening: <strong>Beale Street</strong> for blues bars &mdash; B.B. King&rsquo;s Blues Club or Blues City Cafe. Dinner at <strong>Gus&rsquo;s Fried Chicken</strong> (queue, worth it).</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Day 13</div>
+        <div class="t-body">
+          <p><strong>National Civil Rights Museum</strong> at the Lorraine Motel &mdash; powerful and important, half a day minimum. Lunch: <strong>Rendezvous</strong> for dry-rubbed ribs (down an alley, cash only, iconic) or <strong>Central BBQ</strong> for pulled pork. Afternoon: <strong>Sun Studio</strong> tour &mdash; where Elvis, Johnny Cash, Jerry Lee Lewis and Roy Orbison all recorded. Genuinely spine-tingling. Evening: a last look at Beale Street or a quiet dinner.</p>
+        </div>
+      </div>
+      <div class="time-block reveal">
+        <div class="t-tag">Day 14</div>
+        <div class="t-body">
+          <p><strong>Fly home.</strong> Memphis International (MEM) has connections via Atlanta (Delta) or Charlotte (American) to Heathrow. Typical routing: MEM &rarr; ATL &rarr; LHR. Book early for good fares and seat selection on the transatlantic leg.</p>
+        </div>
+      </div>
+
+      <div class="hotel-choice reveal">
+        <div class="hotel-card mid">
+          <div class="hotel-label">Memphis Character</div>
+          <div class="hotel-name"><a href="https://www.peabodymemphis.com" target="_blank">The Peabody Memphis</a></div>
+          <div class="hotel-location">Downtown Memphis</div>
+          <div class="hotel-desc">An institution &mdash; famous for the ducks that march through the lobby twice daily. Grand old hotel in the heart of downtown, a short walk from Beale Street and the Civil Rights Museum. The rooftop is a great last-night spot.</div>
+          <div class="hotel-price">From ~$200/night</div>
+        </div>
+        <div class="hotel-card lux">
+          <div class="hotel-label">Boutique</div>
+          <div class="hotel-name"><a href="https://www.talbotsinn.com" target="_blank">Talbot Heirs Guesthouse</a></div>
+          <div class="hotel-location">Downtown Memphis</div>
+          <div class="hotel-desc">An eight-room boutique guesthouse above a music shop &mdash; full kitchen, local art, utterly Memphis. The opposite of a chain hotel. If the three of you want something that feels more like a home than a hotel, this is it.</div>
+          <div class="hotel-price">From ~$140/night</div>
+        </div>
+      </div>
+
+      <div class="photo-strip reveal">
+        <div class="photo-strip-item">
+          <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=520&h=360&fit=crop&auto=format" alt="Graceland Memphis" loading="lazy">
+          <div class="photo-label">Graceland</div>
+        </div>
+        <div class="photo-strip-item">
+          <img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=520&h=360&fit=crop&auto=format" alt="Memphis BBQ ribs" loading="lazy">
+          <div class="photo-label">Memphis BBQ</div>
+        </div>
+        <div class="photo-strip-item">
+          <img src="https://images.unsplash.com/photo-1508020379698-7da1b921a24f?w=520&h=360&fit=crop&auto=format" alt="Sun Studio Memphis" loading="lazy">
+          <div class="photo-label">Sun Studio</div>
+        </div>
+      </div>
+
+      <div class="tip-box reveal" style="margin-top:32px">
+        <strong>Last thought:</strong> Fourteen nights sounds like a lot until you&rsquo;re in it. The pace of this trip is generous &mdash; two nights in most places rather than one &mdash; which means you&rsquo;re never rushing. And the wedding in the middle gives it a natural heartbeat. You&rsquo;ll come home with at least three places you want to go back to.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+function switchTab(btn, panelId) {
+  var btns = btn.parentNode.querySelectorAll('.tab-btn');
+  var panels = btn.parentNode.parentNode.querySelectorAll('.tab-panel');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+  for (var i = 0; i < panels.length; i++) panels[i].classList.remove('active');
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// Loading
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    document.getElementById('loading').classList.add('done');
+  }, 600);
+});
+
+// Reveal on scroll
+var reveals = document.querySelectorAll('.reveal');
+var io = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(function(r) { io.observe(r); });
+
+// Nav dot highlight
+var sections = ['s-hero','s-overview','s-leg1','s-leg2','s-leg3'];
+var pips = document.querySelectorAll('.nav-pip');
+var sio = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      var idx = sections.indexOf(e.target.id);
+      if (idx >= 0) {
+        pips.forEach(function(p) { p.classList.remove('active'); });
+        pips[idx].classList.add('active');
+      }
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) sio.observe(el);
+});
+
+// Hero canvas — warm dusk sky with a lone star
+(function() {
+  var c = document.getElementById('hero-canvas');
+  var ctx = c.getContext('2d');
+  var W, H, stars = [];
+  function resize() {
+    W = c.width = c.offsetWidth;
+    H = c.height = c.offsetHeight;
+    stars = [];
+    for (var i = 0; i < 80; i++) {
+      stars.push({ x: Math.random()*W, y: Math.random()*H*0.7, r: Math.random()*1.2+0.3, o: Math.random()*0.6+0.2 });
+    }
+  }
+  function draw(t) {
+    var g = ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#1a0a2e');
+    g.addColorStop(0.4,'#3d1a1a');
+    g.addColorStop(0.75,'#7B3F1E');
+    g.addColorStop(1,'#C4962A');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
+    // Stars
+    stars.forEach(function(s) {
+      ctx.globalAlpha = s.o*(0.7+0.3*Math.sin(t/1200+s.x));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    // Horizon glow
+    var hg = ctx.createRadialGradient(W/2, H, 0, W/2, H, W*0.7);
+    hg.addColorStop(0,'rgba(196,150,42,0.35)');
+    hg.addColorStop(1,'transparent');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0,0,W,H);
+    // Simple landscape silhouette
+    ctx.fillStyle = '#0d0507';
+    ctx.beginPath();
+    ctx.moveTo(0, H);
+    ctx.lineTo(0, H*0.82);
+    ctx.bezierCurveTo(W*0.1, H*0.78, W*0.2, H*0.75, W*0.3, H*0.80);
+    ctx.bezierCurveTo(W*0.4, H*0.85, W*0.5, H*0.72, W*0.6, H*0.76);
+    ctx.bezierCurveTo(W*0.7, H*0.80, W*0.8, H*0.78, W*0.9, H*0.83);
+    ctx.lineTo(W, H*0.80);
+    ctx.lineTo(W, H);
+    ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
