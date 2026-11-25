@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,7 +54,7 @@ a{color:var(--world)}
 .badge-puglia{background:rgba(181,86,47,0.75);color:#fde0cc;border:1px solid rgba(220,120,70,0.5)}
 .badge-iceland{background:rgba(31,111,120,0.75);color:#c0eaf0;border:1px solid rgba(60,160,175,0.5)}
 .badge-wyoming{background:rgba(45,74,45,0.8);color:#c8e8c0;border:1px solid rgba(74,122,74,0.5)}
-.badge-texas{background:rgba(123,63,30,0.8);color:#f0d0a0;border:1px solid rgba(160,88,40,0.5)}
+.badge-seville{background:rgba(160,80,20,0.85);color:#fde8c0;border:1px solid rgba(200,110,30,0.5)}
 .feat-label{position:absolute;bottom:12px;left:14px;right:14px}
 .feat-when{font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:2px}
 .feat-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff;line-height:1.1}
@@ -157,9 +158,13 @@ a{color:var(--world)}
   <div class="yr">2026<div class="actual-badge">Done ✓</div></div>
   <div class="trips">
     <div class="trip world-t"><div class="when">March</div><div class="where">Gran Canaria</div><span class="tag actual">Done</span></div>
-    <div class="trip uk-t"><div class="when">April</div><div class="where">Norfolk Broads</div><div class="why">Long boat</div><span class="tag actual">Done</span></div>
     <div class="trip europe-t"><div class="when">July</div><div class="where">European Road Trip</div><div class="why">France, Belgium, Holland, Germany — 7 days</div><span class="tag actual">Done</span></div>
-    <div class="trip world-t"><div class="when">September</div><div class="where"><a href="https://juliandowning.github.io/seville/" target="_blank" rel="noopener">Seville</a></div><span class="tag actual">Done</span></div>
+    <div class="itin-grid" style="grid-column:1/-1">
+      <a href="https://juliandowning.github.io/seville/" target="_blank" rel="noopener" class="itin-card">
+        <div class="itin-canvas-wrap"><canvas class="itin-canvas" id="canvas-seville"></canvas><div class="feat-overlay"></div><div class="feat-badge badge-seville">Sept &middot; Spain</div><div class="feat-label"><div class="feat-when">Done ✓</div><div class="feat-name">Seville<br><em>Andalucía</em></div></div></div>
+        <div class="itin-body"><p class="itin-desc">Flamenco, sherry &amp; baroque grandeur — the finest city in southern Spain.</p><span class="itin-cta">View itinerary →</span></div>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -168,21 +173,17 @@ a{color:var(--world)}
   <div class="yr">2027<small>Planned</small></div>
   <div class="trips">
     <div class="itin-grid">
-      <a href="puglia.html" class="itin-card">
-        <div class="itin-canvas-wrap"><canvas class="itin-canvas" id="canvas-puglia"></canvas><div class="feat-overlay"></div><div class="feat-badge badge-puglia">May &middot; Europe</div><div class="feat-label"><div class="feat-when">With Donna &amp; Gary</div><div class="feat-name">Puglia<br><em>Fasano, Ostuni &amp; Lecce</em></div></div></div>
-        <div class="itin-body"><p class="itin-desc">Six nights in Italy's heel — trulli, olive groves, baroque Lecce.</p><span class="itin-cta">View itinerary →</span></div>
+      <a href="https://juliandowning.github.io/puglia/" target="_blank" rel="noopener" class="itin-card">
+        <div class="itin-canvas-wrap"><canvas class="itin-canvas" id="canvas-puglia"></canvas><div class="feat-overlay"></div><div class="feat-badge badge-puglia">24 May &middot; 5 nights</div><div class="feat-label"><div class="feat-when">With Donna &amp; Gary</div><div class="feat-name">Puglia<br><em>Fasano, Ostuni &amp; Lecce</em></div></div></div>
+        <div class="itin-body"><p class="itin-desc">Five nights in Italy's heel — trulli, olive groves, baroque Lecce.</p><span class="itin-cta">View itinerary →</span></div>
       </a>
       <a href="https://juliandowning.github.io/iceland_jack_birthday/" target="_blank" rel="noopener" class="itin-card">
         <div class="itin-canvas-wrap"><canvas class="itin-canvas" id="canvas-iceland"></canvas><div class="feat-overlay"></div><div class="feat-badge badge-iceland">June &middot; Europe</div><div class="feat-label"><div class="feat-when">Jack's 30th birthday</div><div class="feat-name">Iceland<br><em>Hella &amp; Reykjavík</em></div></div></div>
         <div class="itin-body"><p class="itin-desc">Midsummer — Golden Circle, south coast, midnight sun.</p><span class="itin-cta">View itinerary →</span></div>
       </a>
       <a href="wyoming/" class="itin-card">
-        <div class="itin-canvas-wrap"><canvas class="itin-canvas" id="canvas-wyoming"></canvas><div class="feat-overlay"></div><div class="feat-badge badge-wyoming">Oct &middot; USA</div><div class="feat-label"><div class="feat-when">Option A — wilderness route</div><div class="feat-name">Wyoming &amp;<br><em>Montana</em></div></div></div>
+        <div class="itin-canvas-wrap"><canvas class="itin-canvas" id="canvas-wyoming"></canvas><div class="feat-overlay"></div><div class="feat-badge badge-wyoming">Oct &middot; USA</div><div class="feat-label"><div class="feat-when">Wilderness &amp; wedding</div><div class="feat-name">Wyoming &amp;<br><em>Montana</em></div></div></div>
         <div class="itin-body"><p class="itin-desc">Grand Teton, Yellowstone, Cody, Bozeman — ending at the Texas wedding.</p><span class="itin-cta">View itinerary →</span></div>
-      </a>
-      <a href="texas/" class="itin-card">
-        <div class="itin-canvas-wrap"><canvas class="itin-canvas" id="canvas-texas"></canvas><div class="feat-overlay"></div><div class="feat-badge badge-texas">Oct &middot; USA</div><div class="feat-label"><div class="feat-when">Option B — Deep South route</div><div class="feat-name">Texas &amp;<br><em>New Orleans</em></div></div></div>
-        <div class="itin-body"><p class="itin-desc">Austin, Marble Falls wedding, Natchez Trace, New Orleans, Nashville.</p><span class="itin-cta">View itinerary →</span></div>
       </a>
     </div>
   </div>
@@ -278,6 +279,7 @@ a{color:var(--world)}
   <div class="box">
     <h2>Other options</h2>
     <ul>
+      <li><strong>Norfolk Broads</strong> — longboat trip, UK</li>
       <li><strong>Italy, north to south</strong> — full grand tour, date TBC</li>
       <li><strong>Scotland Highlands &amp; Islands</strong> — September for fewest midges, date TBC</li>
       <li><strong>Hong Kong / Bali (Lombok)</strong> — originally 2026, date TBC</li>
@@ -412,18 +414,28 @@ a{color:var(--world)}
   draw();
 })();
 
-/* ── TEXAS ITIN CANVAS ── */
+/* ── SEVILLE CANVAS ── */
 (function(){
-  var c=document.getElementById('canvas-texas');if(!c)return;
-  var ctx=c.getContext('2d'),w=0,h=0,t=0;
+  var c=document.getElementById('canvas-seville');if(!c)return;
+  var ctx=c.getContext('2d'),w,h,t=0;
   function resize(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;}
   resize();window.addEventListener('resize',resize);
   function draw(){
     t+=0.005;ctx.clearRect(0,0,w,h);
-    var sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#1A0A2E');sky.addColorStop(0.3,'#3D1A1A');sky.addColorStop(0.6,'#7B3F1E');sky.addColorStop(0.85,'#C4962A');sky.addColorStop(1,'#1A1008');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
-    var glow=ctx.createRadialGradient(w*0.5,h*0.78,0,w*0.5,h*0.78,w*0.5);glow.addColorStop(0,'rgba(220,160,40,0.25)');glow.addColorStop(1,'transparent');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
-    for(var i=0;i<30;i++){var sx=((i*137.5)%1)*w,sy=((i*73.1)%0.4)*h,sa=Math.sin(t*2+i)*0.5+0.5;ctx.beginPath();ctx.arc(sx,sy,0.7+(i%3)*0.35,0,Math.PI*2);ctx.fillStyle='rgba(255,240,210,'+(0.2+sa*0.4)+')';ctx.fill();}
-    ctx.fillStyle='rgba(10,5,2,0.95)';ctx.beginPath();ctx.moveTo(0,h);ctx.lineTo(0,h*0.65);ctx.bezierCurveTo(w*0.05,h*0.58,w*0.12,h*0.62,w*0.18,h*0.60);ctx.bezierCurveTo(w*0.24,h*0.56,w*0.3,h*0.60,w*0.36,h*0.58);ctx.bezierCurveTo(w*0.42,h*0.54,w*0.48,h*0.58,w*0.52,h*0.56);ctx.bezierCurveTo(w*0.58,h*0.52,w*0.65,h*0.57,w*0.72,h*0.60);ctx.bezierCurveTo(w*0.80,h*0.56,w*0.88,h*0.63,w,h*0.62);ctx.lineTo(w,h);ctx.closePath();ctx.fill();
+    var sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#1A0E2A');sky.addColorStop(0.4,'#602214');sky.addColorStop(0.75,'#D47828');sky.addColorStop(1,'#F0A858');
+    ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+    var glow=ctx.createRadialGradient(w*0.62,h*0.58,0,w*0.62,h*0.58,w*0.5);glow.addColorStop(0,'rgba(240,140,30,0.35)');glow.addColorStop(1,'transparent');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
+    /* Giralda silhouette */
+    ctx.fillStyle='rgba(8,4,2,0.92)';
+    var tx=w*0.6,by=h*0.62,tw=w*0.055,th=h*0.44;
+    ctx.fillRect(tx-tw/2,by-th,tw,th);
+    ctx.fillRect(tx-tw*0.7,by-th*0.55,tw*1.4,th*0.12);
+    ctx.fillRect(tx-tw*0.5,by-th*0.75,tw,th*0.2);
+    ctx.beginPath();ctx.moveTo(tx,by-th-h*0.07);ctx.lineTo(tx-tw*0.3,by-th);ctx.lineTo(tx+tw*0.3,by-th);ctx.closePath();ctx.fill();
+    /* rooftops */
+    [0.08,0.2,0.35,0.78,0.88].forEach(function(px,i){var bx=px*w,bw=w*0.1,bh=h*(0.12+i%3*0.04);ctx.fillRect(bx,by-bh,bw,bh);});
+    /* ground */
+    ctx.fillRect(0,by,w,h);
     requestAnimationFrame(draw);
   }
   draw();
@@ -436,3 +448,5 @@ revEls.forEach(function(el){io.observe(el);});
 </script>
 </body>
 </html>
+
+</body></html>
